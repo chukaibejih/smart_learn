@@ -2,6 +2,12 @@
 
 This is an API for a Smart Learning project built with Django Rest Framework (DRF). The API allows users to enroll in courses, complete lessons and quizzes, and track their progress. Instructors can create and manage courses, lessons, and quizzes, as well as view information about enrolled users.
 
+System Architecture
+---------------
+
+![Smart Leraning Microservices](https://user-images.githubusercontent.com/29266211/223101762-4a6eda00-5ca9-48af-b86f-6d219fe05f2b.jpg)
+
+
 Getting Started
 ---------------
 
