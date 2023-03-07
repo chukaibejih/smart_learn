@@ -8,6 +8,11 @@ System Architecture
 ![Smart Leraning Microservices](https://user-images.githubusercontent.com/29266211/223101762-4a6eda00-5ca9-48af-b86f-6d219fe05f2b.jpg)
 
 
+ER Diagram
+---------------
+![QuickDBD-Free Diagram](https://user-images.githubusercontent.com/29266211/223405084-9e59a15b-9689-4f62-99a3-cc6a772404c2.png)
+link: https://app.quickdatabasediagrams.com/#/d/e4VNIM
+
 Getting Started
 ---------------
 
