@@ -5,13 +5,13 @@ This is an API for a Smart Learning project built with Django Rest Framework (DR
 System Architecture
 ---------------
 
-![Smart Leraning Microservices](https://user-images.githubusercontent.com/29266211/223101762-4a6eda00-5ca9-48af-b86f-6d219fe05f2b.jpg)
+![Smart Leraning Microservices (2)](https://user-images.githubusercontent.com/29266211/223722821-d64cbe95-6a67-4f99-bf72-0bfffe675378.jpg)
 
 
 ER Diagram
 ---------------
-![QuickDBD-Free Diagram](https://user-images.githubusercontent.com/29266211/223405084-9e59a15b-9689-4f62-99a3-cc6a772404c2.png)
-link: https://app.quickdatabasediagrams.com/#/d/e4VNIM
+![Smart Learn](https://user-images.githubusercontent.com/29266211/223722883-c0b9726b-35f6-4ae1-9f85-dd28797e37f8.png)
+link: https://dbdiagram.io/d/64087c2f296d97641d865ec8
 
 Getting Started
 ---------------
