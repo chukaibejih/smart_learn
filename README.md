@@ -10,7 +10,7 @@ System Architecture
 
 ER Diagram
 ---------------
-![Smart Learn](https://user-images.githubusercontent.com/29266211/223722883-c0b9726b-35f6-4ae1-9f85-dd28797e37f8.png)
+![Smart Learn (1)](https://user-images.githubusercontent.com/29266211/224011059-db0a42b7-6731-471d-bfc1-dd9977bd5f81.png)
 link: https://dbdiagram.io/d/64087c2f296d97641d865ec8
 
 Getting Started
