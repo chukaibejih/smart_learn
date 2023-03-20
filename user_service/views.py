@@ -1,10 +1,14 @@
 from rest_framework import viewsets, permissions
 from django.contrib.auth import get_user_model
-from user_service.serializers import UserSerializer, UserRegistrationSerializer
-
+from user_service.serializers import UserSerializer, UserRegistrationSerializer, CustomTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 User = get_user_model()
 
 # Create your views here.
+
+class CustomTokenObtainPairViewSet(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
