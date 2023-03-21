@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5*-+tizi2i$x383b6sfmjlh92i+3x=hfk6^1o(x_=dm$2h7#an'
+SECRET_KEY = os.getenv('SECRET_KEY'),
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -76,6 +76,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@smartlearn'
 
 ROOT_URLCONF = 'smart_learning.urls'
 
@@ -148,6 +150,15 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+# Time in hours about how long the token is active
+DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 6
+
+# Return 200 even if the user doesn't exist in the database
+DJANGO_REST_PASSWORDRESET_NO_INFORMATION_LEAKAGE = True
+
+# Allow password reset for a user that does not have a usable password
+DJANGO_REST_MULTITOKENAUTH_REQUIRE_USABLE_PASSWORD = True
 
 
 SIMPLE_JWT = {
