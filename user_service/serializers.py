@@ -5,6 +5,19 @@ from rest_framework import serializers
 from user_service.models import User
 
 
+class ConfirmEmailSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(min_length=1, write_only=True)
+    uidb64 = serializers.CharField(min_length=1, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['token', 'uidb64']
+        
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
     
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer): 
 

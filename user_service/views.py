@@ -1,10 +1,56 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status, generics
 from django.contrib.auth import get_user_model
-from user_service.serializers import UserSerializer, UserRegistrationSerializer, CustomTokenObtainPairSerializer
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import smart_str
+from django.utils.http import urlsafe_base64_decode
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.response import Response
+from user_service.serializers import UserSerializer, UserRegistrationSerializer, CustomTokenObtainPairSerializer, ChangePasswordSerializer, ConfirmEmailSerializer
 User = get_user_model()
 
 # Create your views here.
+
+class ConfirmEmailView(APIView):
+
+    queryset = get_user_model().objects.all()
+    serializer_class = ConfirmEmailSerializer
+    permission_classes = []
+
+    def get(self, request, uidb64, token):
+        try:
+            uid = smart_str(urlsafe_base64_decode(uidb64))
+            user = get_user_model().objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+            return Response({"error": "Invalid user ID"}, status=400)
+
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.is_verified = True
+            user.save()
+            return Response({"message": "Email confirmation successful"})
+        else:
+            return Response({"error": "Invalid token"}, status=400)
+
+class ChangePasswordView(generics.CreateAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        old_password = request.data.get("old_password")
+        if not request.user.check_password(old_password):
+            return Response({"error": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        new_password = request.data.get("new_password")
+        request.user.set_password(new_password)
+        request.user.save()
+        
+        return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
+
 
 class CustomTokenObtainPairViewSet(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
