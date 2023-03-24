@@ -23,6 +23,11 @@ class User(AbstractUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
+    
+    def save(self, *args, **kwargs):
+        if self.is_superuser:
+            self.is_verified = True 
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.email
