@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from user_service.models import User
+from user_service.models import User, StudentProfile, InstructorProfile
 
 
 class ConfirmEmailSerializer(serializers.ModelSerializer):
@@ -87,4 +87,40 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'is_instructor', 'is_active', 'is_verified', 'created_at',]
+
+
+class StudentProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentProfile
+        fields = "__all__"
      
+
+class InstructorProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InstructorProfile
+        fields = "__all__"
+
+
+class RetrieveUserSerializer(serializers.ModelSerializer):
+    student_profile = serializers.SerializerMethodField()
+    instructor_profile = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'is_instructor', 'is_active', 'is_verified', 'created_at', 'student_profile', 'instructor_profile']
+
+    def get_student_profile(self, obj):
+        try:
+            profile = obj.student_profile
+            return StudentProfileSerializer(profile).data
+        except StudentProfile.DoesNotExist:
+            return None
+
+    def get_instructor_profile(self, obj):
+        try:
+            profile = obj.instructor_profile
+            return InstructorProfileSerializer(profile).data
+        except InstructorProfile.DoesNotExist:
+            return None
