@@ -1,23 +1,24 @@
 import uuid
+import contextlib
+from shortuuid.django_fields import ShortUUIDField 
+from phonenumber_field.modelfields import PhoneNumberField
+from django_countries.fields import CountryField
 from django.conf import settings
-from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.db import models
+
 from user_service.manager import UserManager
 
 
-# Create your models here.
-
 class User(AbstractUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(unique=True)
     username = None
+    email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     is_instructor = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
     objects = UserManager()
 
@@ -29,5 +30,64 @@ class User(AbstractUser, PermissionsMixin):
             self.is_verified = True 
         return super().save(*args, **kwargs)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.email
+
+
+class StudentProfile(models.Model):
+    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='student_profile')
+    date_of_birth = models.DateField(blank=True, null=True)
+    gender = models.CharField(max_length=10, blank=True, null=True)
+    phone_number = PhoneNumberField(blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
+    country = models.CharField(max_length=50, blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='student/profile_pictures/', blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Student Profiles'
+
+    def __str__(self):
+        return self.user.email
+
+    def save(self, *args, **kwargs):
+        """Deletes old profile_picture when making an update to profile_picture"""
+        with contextlib.suppress(Exception):
+            old = StudentProfile.objects.get(id=self.id)
+            if old.profile_picture != self.profile_picture:
+                old.profile_picture.delete(save=False)
+        super().save(*args, **kwargs)
+
+
+class InstructorProfile(models.Model):
+    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='instructor_profile')
+    date_of_birth = models.DateField(blank=True, null=True)
+    gender = models.CharField(max_length=10, blank=True, null=True)
+    phone_number = PhoneNumberField(blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
+    country = CountryField(blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='instructor/profile_pictures/', blank=True, null=True)
+    total_students = models.PositiveIntegerField(default=0)
+    reviews = models.PositiveIntegerField(default=0)
+    linkedin = models.URLField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Instructor Profiles'
+
+    def __str__(self):
+        return self.user.email
+
+    def save(self, *args, **kwargs):
+        """Deletes old profile_picture when making an update to profile_picture"""
+        with contextlib.suppress(Exception):
+            old = InstructorProfile.objects.get(id=self.id)
+            if old.profile_picture != self.profile_picture:
+                old.profile_picture.delete(save=False)
+        super().save(*args, **kwargs)

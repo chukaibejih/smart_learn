@@ -13,6 +13,8 @@ from smart_learning.settings import DEFAULT_FROM_EMAIL
 from dotenv import load_dotenv
 load_dotenv()
 
+from .models import StudentProfile, InstructorProfile
+
 
 @receiver(post_save, sender=get_user_model(), dispatch_uid="unique_identifier")
 def send_confirmation_email(sender, instance, created, **kwargs):
@@ -55,3 +57,12 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     msg = EmailMultiAlternatives(subject, email_html_message, from_email, [to_email])
     # msg.attach_alternative(email_html_message, "text/html")
     msg.send()
+
+
+@receiver(post_save, sender=get_user_model())
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        if not instance.is_instructor:
+            StudentProfile.objects.create(user=instance)
+        else:
+            InstructorProfile.objects.create(user=instance)
