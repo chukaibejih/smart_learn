@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
-from user_service.views import UserViewSet, CustomTokenObtainPairViewSet, ConfirmEmailView, InstructorProfileViewset, StudentProfileViewset
+from user_service.views import UserViewSet, CustomTokenObtainPairViewSet, ConfirmEmailView,  StudentProfileViewset, InstructorProfileViewset
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
