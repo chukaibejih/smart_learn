@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
      # local apps
     'user_service.apps.UserServiceConfig',
+    'course_service',
 
     # Third party apps
     'corsheaders',
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'phonenumber_field',
     'django_countries',
+    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'user_service.User'
@@ -164,9 +166,20 @@ DJANGO_REST_MULTITOKENAUTH_REQUIRE_USABLE_PASSWORD = True
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'UPDATE_LAST_LOGIN': True,
+}
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "name": "Authorization",
+            "type": "apiKey",
+            "in": "header",
+        }
+    },
+    "USE_SESSION_AUTH": False,
 }
 
 

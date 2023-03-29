@@ -6,7 +6,7 @@ from django.utils.http import urlsafe_base64_decode
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
-from user_service.models import InstructorProfile, StudentProfile
+from user_service.models import StudentProfile, InstructorProfile
 from user_service.serializers import (
     UserSerializer, UserRegistrationSerializer, CustomTokenObtainPairSerializer, 
     ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, InstructorProfileSerializer
