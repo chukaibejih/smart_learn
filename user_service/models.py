@@ -45,7 +45,7 @@ class StudentProfile(models.Model):
     state = models.CharField(max_length=50, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='student/profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='user_service/student/profile_pictures/', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Student Profiles'
@@ -71,9 +71,9 @@ class InstructorProfile(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     state = models.CharField(max_length=50, blank=True, null=True)
-    country = CountryField(blank=True, null=True)
+    country = models.CharField(max_length=50, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='instructor/profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='user_service/instructor/profile_pictures/', blank=True, null=True)
     total_students = models.PositiveIntegerField(default=0)
     reviews = models.PositiveIntegerField(default=0)
     linkedin = models.URLField(blank=True, null=True)
