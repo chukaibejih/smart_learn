@@ -8,7 +8,7 @@ import contextlib
 class Course(models.Model):
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
     name = models.CharField(max_length=200, null=True, blank=True)
-    cover_image = models.ImageField(upload_to='instructor/courses/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='course_service/courses/', blank=True, null=True)
     description = models.TextField()
     instructor = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE, related_name="instructor", null=True)
     difficulty = models.PositiveIntegerField(

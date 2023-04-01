@@ -6,6 +6,7 @@ from user_service.models import InstructorProfile
 from django.contrib.auth import get_user_model
 from .serializers import CourseSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from django_auto_prefetching import AutoPrefetchViewSetMixin
 from rest_framework.filters import OrderingFilter, SearchFilter
 from .filters import CourseFilter
 from .pagination import CustomPagination
@@ -14,7 +15,7 @@ from .renderers import CustomRenderer
 User = get_user_model()
 # Create your views here.
 
-class CourseViewSet(viewsets.ModelViewSet):
+class CourseViewSet(AutoPrefetchViewSetMixin,viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     search_fields = ["name", "instructor__user__first_name", "instructor__user__last_name"]
