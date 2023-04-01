@@ -24,9 +24,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     """Override default token login to include user data"""
 
     def validate(self, attrs):
-        print("attrs----", attrs)
         data = super().validate(attrs)
-        print("data----", data)
         user = self.user
         if not user.is_verified:
             raise serializers.ValidationError({"error":"Email is not verified."})
@@ -52,7 +50,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     # Meta class to specify the model and its fields to be serialized
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'password', ] 
+        fields = ['id', 'email', 'first_name', 'last_name', 'password','is_instructor', ] 
 
     # Method to validate the email entered by the user
     def validate_email(self, value):
@@ -75,7 +73,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             password=validated_data['password'],
-            is_instructor=False,
+            is_instructor=validated_data['is_instructor'],
             is_verified=False
 
         )

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_countries',
     'django_filters',
+    'debug_toolbar',
 ]
 
 AUTH_USER_MODEL = 'user_service.User'
@@ -62,6 +63,7 @@ AUTH_USER_MODEL = 'user_service.User'
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -80,6 +82,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@smartlearn'
 
