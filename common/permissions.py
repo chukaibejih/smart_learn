@@ -34,13 +34,21 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         
         return False
 
-class IsInstructorOrReadOnly(permissions.BasePermission):
+class IsCreatorOrReadOnly(permissions.BasePermission):
     
     def has_object_permission(self, request, view, obj):
         # Allow Read-Only access to all users
         if request.method in permissions.SAFE_METHODS:
             return True
         
-        # Check if the object has a 'created_by' attribute and if the request user is the creator.
+        # Allow full access to admin users.
+        if request.user.is_staff:
+            return True
+        
+        # Check if the object has a 'instructor' attribute, then return the truthiness.
         if hasattr(obj, "instructor"):
             return obj.instructor == request.user 
+        
+        # Check if the object has a 'user' attribute, then return the truthiness.
+        if hasattr(obj, "user"):
+            return obj.user == request.user 
