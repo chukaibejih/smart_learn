@@ -1,4 +1,4 @@
-from .models import Course 
+from .models import Course, Review
 from rest_framework import serializers 
 
 
@@ -12,3 +12,12 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course 
         fields = "__all__"
+        
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    course = serializers.StringRelatedField()    
+    class Meta:
+        model = Review 
+        fields = "__all__"
+        
