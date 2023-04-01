@@ -72,8 +72,6 @@ class ReviewCreateView(generics.CreateAPIView):
                                             "detail": "This user has already created a review about this course"
                                             }
                                             )
-        except Exception as e:
-            raise e
         else:
             course.reviews += 1
             average = Review.objects.filter(course=course).aggregate(Avg("rating"))
