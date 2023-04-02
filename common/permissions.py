@@ -47,7 +47,7 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
         
         # Check if the object has a 'instructor' attribute, then return the truthiness.
         if hasattr(obj, "instructor"):
-            return obj.instructor == request.user 
+            return obj.instructor.user == request.user 
         
         # Check if the object has a 'user' attribute, then return the truthiness.
         if hasattr(obj, "user"):

@@ -60,6 +60,7 @@ class ReviewCreateView(generics.CreateAPIView):
     pagination_class = CustomPagination 
     renderer_classes = [CustomRenderer]
     permission_classes = [permissions.IsAuthenticated]
+    queryset = Review.objects.all()
     
     def perform_create(self, serializer):
         
@@ -80,7 +81,7 @@ class ReviewCreateView(generics.CreateAPIView):
             course.save()
             
             
-class ReviewListView(generics.ListAPIView):
+class ReviewListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
     serializer_class = ReviewSerializer 
     pagination_class = CustomPagination 
     renderer_classes = [CustomRenderer]
