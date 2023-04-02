@@ -21,7 +21,7 @@ def send_confirmation_email(sender, instance, created, **kwargs):
     if created:
         try:
             subject = 'Confirm Your Email Address'
-            message = render_to_string('accounts/email_confirmation.html', {
+            message = render_to_string('users/email_confirmation.html', {
             'user': instance,
             'domain': 'localhost:8000',
             'uid': urlsafe_base64_encode(smart_bytes(instance.pk)),
@@ -48,7 +48,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'reset_password_url': f"{instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm'))}?token={reset_password_token.key}"
     }
 
-    email_html_message = render_to_string('accounts/reset_password.html', context)
+    email_html_message = render_to_string('users/reset_password.html', context)
 
     subject = "Password Reset for Smart Learning Account"
     from_email = DEFAULT_FROM_EMAIL
