@@ -5,18 +5,21 @@ from user_service.models import *
 from django.urls import reverse 
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.http import urlencode
-
+from password_generator import PasswordGenerator
 # Create your tests here.
 
 
 class ModelSetup:
     
+    
     def common_model_setup(self):
+        pwg = PasswordGenerator()
+        pwg.minlen = 10
         self.user1 = User.objects.create_user(
                                             first_name="John", 
                                             last_name="Doe" ,
                                             email="example1@gmail.com", 
-                                            password="Akpororo1", 
+                                            password=pwg.generate(), 
                                             is_instructor=True, 
                                             is_verified=True
                                             )
@@ -24,7 +27,7 @@ class ModelSetup:
                                             first_name="Michael", 
                                             last_name="Kruse" ,
                                             email="example2@gmail.com", 
-                                            password="Akpororo1", 
+                                            password=pwg.generate(), 
                                             is_instructor=True, 
                                             is_verified=True
                                             )
