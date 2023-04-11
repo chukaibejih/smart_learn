@@ -38,6 +38,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('user_service.urls')),
     path('courses/', include('course_service.urls')),
+    path('modules/', include('module_service.urls')),
 
 
     path('__debug__/', include('debug_toolbar.urls')),
