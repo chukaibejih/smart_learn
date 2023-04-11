@@ -52,3 +52,10 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
         # Check if the object has a 'user' attribute, then return the truthiness.
         if hasattr(obj, "user"):
             return obj.user == request.user 
+        
+
+class IsCourseInstructor(permissions.BasePermission):
+    message = 'You are not the instructor of this course.'
+
+    def has_object_permission(self, request, view, obj):
+        return obj.course.instructor.user == request.user
