@@ -7,17 +7,19 @@ from django.conf import settings
 # Create your models here.
 
 class Course(models.Model):
+
+    DIFFICULTY = (
+        ("Beginner", "Beginner"),
+        ("Intermediate", "Intermediate"),
+        ("Advanced", "Advanced")
+    )
+
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
     name = models.CharField(max_length=200, null=True, blank=True)
     cover_image = models.ImageField(upload_to='course_service/courses/', blank=True, null=True)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     instructor = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE, related_name="instructor", null=True)
-    difficulty = models.PositiveIntegerField(
-                                             validators=[
-                                                         MinValueValidator(0), 
-                                                         MaxValueValidator(5)
-                                                        ], default=0
-                                             )
+    difficulty = models.CharField(max_length=20, choices=DIFFICULTY, null=True, blank=True)
     prerequisites = models.TextField(null=True, blank=True)
     requirements = models.TextField(null=True, blank=True)
     is_certified = models.BooleanField(default=False)
@@ -28,7 +30,7 @@ class Course(models.Model):
                                           )
     average_rating = models.FloatField(default=0)
     price = models.FloatField(null=True, blank=True)
-    duration = models.CharField(max_length=30)
+    duration = models.CharField(max_length=30, null=True, blank=True)
     is_available = models.BooleanField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

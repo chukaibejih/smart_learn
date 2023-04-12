@@ -23,7 +23,7 @@ class UserServiceTestCase(APITestCase):
             'first_name': 'John',
             'last_name': 'Doe',
             'password': 'testpassword',
-            'is_instructor':False
+            'is_instructor':True
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -64,5 +64,4 @@ class UserServiceTestCase(APITestCase):
             'password': 'testpassword'
          }
          response = self.client.post(url, data)
-         print(response.json())
          self.assertEqual(response.status_code, status.HTTP_200_OK)
