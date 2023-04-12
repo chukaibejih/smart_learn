@@ -9,9 +9,9 @@ from django.conf import settings
 class Course(models.Model):
 
     DIFFICULTY = (
-        ("BEGINNER", "BEGINNER"),
-        ("INTERMEDIATE", "INTERMEDIATE"),
-        ("ADVANCED", "ADVANCED")
+        ("Beginner", "Beginner"),
+        ("Intermediate", "Intermediate"),
+        ("Advanced", "Advanced")
     )
 
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)

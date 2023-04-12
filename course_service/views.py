@@ -110,6 +110,9 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
         course.average_rating = average["rating__avg"]
         course.save()
 
+
+
+
     
     
     
