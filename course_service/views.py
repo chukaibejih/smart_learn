@@ -102,9 +102,17 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
         obj = get_object_or_404(Review, id=pk)
         self.check_object_permissions(self.request, obj)
         return obj 
-    
+
     def perform_update(self, serializer):
-        pass
+        serializer.save()
+        course = self.get_object().course
+        average = Review.objects.filter(course=course).aggregate(Avg("rating"))
+        course.average_rating = average["rating__avg"]
+        course.save()
+
+
+
+
     
     
     
