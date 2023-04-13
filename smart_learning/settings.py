@@ -116,7 +116,7 @@ WSGI_APPLICATION = 'smart_learning.wsgi.application'
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
         'NAME': os.getenv('DB_NAME'),
 
