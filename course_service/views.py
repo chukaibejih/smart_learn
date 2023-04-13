@@ -11,9 +11,8 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from .filters import CourseFilter
 from .pagination import CustomPagination
 from .renderers import CustomRenderer
-from django.shortcuts import get_object_or_404
-from django.db.models import Avg 
 from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
 
 User = get_user_model()
 # Create your views here.
@@ -74,11 +73,6 @@ class ReviewCreateView(generics.CreateAPIView):
                                             "detail": "This user has already created a review about this course"
                                             }
                                             )
-        else:
-            course.reviews += 1
-            average = Review.objects.filter(course=course).aggregate(Avg("rating"))
-            course.average_rating = average["rating__avg"]
-            course.save()
             
             
 class ReviewListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
@@ -91,7 +85,8 @@ class ReviewListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
     def get_queryset(self):
         pk = self.kwargs["pk"]
         return super().get_queryset().filter(user__is_active=True, course__id=pk)
-    
+
+
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer 
     renderer_classes = [CustomRenderer]
@@ -103,12 +98,7 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj 
 
-    def perform_update(self, serializer):
-        serializer.save()
-        course = self.get_object().course
-        average = Review.objects.filter(course=course).aggregate(Avg("rating"))
-        course.average_rating = average["rating__avg"]
-        course.save()
+
 
 
 
