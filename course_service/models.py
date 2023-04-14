@@ -92,7 +92,7 @@ class SkillCertification(models.Model):
     skill = models.OneToOneField(InstructorSkill, on_delete=models.CASCADE, blank=True, null=True, related_name="skill_certification")
     certification_name = models.CharField(max_length=50)
     certification_date = models.DateField()
-    certificate_file = models.ImageField(null=True, blank=True)
+    certificate_file = models.ImageField(upload_t0="user_service/instructor/certificates/", null=True, blank=True)
 
     def __str__(self):
         return self.certification_name
