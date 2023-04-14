@@ -3,10 +3,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import smart_str
 from django.utils.http import urlsafe_base64_decode
+from django_auto_prefetching import AutoPrefetchViewSetMixin
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
-from user_service.serializers import UserSerializer, UserRegistrationSerializer, CustomTokenObtainPairSerializer, ChangePasswordSerializer, ConfirmEmailSerializer
+from user_service.models import StudentProfile, InstructorProfile
+from user_service.serializers import (
+ UserRegistrationSerializer, CustomTokenObtainPairSerializer, RetrieveUserSerializer,
+    ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, InstructorProfileSerializer
+)
+
+from common import permissions as custom_permissions
 User = get_user_model()
 
 # Create your views here.
@@ -56,9 +63,9 @@ class CustomTokenObtainPairViewSet(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
-    serializer_class = UserSerializer
+    serializer_class = RetrieveUserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     # Define a get_queryset method that returns only active users for non-superusers
@@ -80,4 +87,59 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'destroy':
             return {permissions.IsAuthenticated(), permissions.IsAdminUser()}
         return super().get_permissions()
+    
 
+class StudentProfileViewset(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
+
+    """
+    list: Get all user profiles. Search by "first_name", "last_name", "email".
+    retrieve: Get a single profile by profile ID.
+    partial_update: Update profile by profile ID.
+    """
+
+    serializer_class = StudentProfileSerializer
+    queryset = StudentProfile.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ["get", "patch"]
+    search_fields = ["user__first_name", "user__last_name", "user__email"]
+
+    def get_queryset(self):
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return super().get_queryset()
+        return super().get_queryset().filter(user__is_active=True)
+
+    def get_permissions(self):
+        if self.action in ["update", "partial_update"]:
+            return [
+                permissions.IsAuthenticated(),
+                custom_permissions.IsOwnerOrReadOnly(),
+            ]
+        return super().get_permissions()
+
+
+class InstructorProfileViewset(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
+
+    """
+    list: Get all user profiles. Search by "first_name", "last_name", "email".
+    retrieve: Get a single profile by profile ID.
+    partial_update: Update profile by profile ID.
+    """
+
+    serializer_class = InstructorProfileSerializer
+    queryset = InstructorProfile.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ["get", "patch"]
+    search_fields = ["user__first_name", "user__last_name", "user__email"]
+
+    def get_queryset(self):
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return super().get_queryset()
+        return super().get_queryset().filter(user__is_active=True)
+
+    def get_permissions(self):
+        if self.action in ["update", "partial_update"]:
+            return [
+                permissions.IsAuthenticated(),
+                custom_permissions.IsOwnerOrReadOnly(),
+            ]
+        return super().get_permissions()
