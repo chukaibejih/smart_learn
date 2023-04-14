@@ -8,6 +8,7 @@ def update_course_stats(sender, instance, **kwargs):
     course = instance.course
     reviews = Review.objects.filter(course=course)
     course.reviews = reviews.count()
+    # Get the average rating if there are at least 1 rating else return the default rating
     if course.reviews != 0:
         course.average_rating = reviews.aggregate(avg_rating=Avg('rating'))['avg_rating']
     else:
