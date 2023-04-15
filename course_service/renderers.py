@@ -3,6 +3,13 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 
 class CustomRenderer(JSONRenderer):
+    '''
+    Ensure all API endpoints are rendered in the same format as in
+    {
+        'status': ....,
+        'data': [...]
+    }
+    '''
     
     charset = "utf-8"
     

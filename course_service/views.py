@@ -56,13 +56,13 @@ class CourseViewSet(AutoPrefetchViewSetMixin,viewsets.ModelViewSet):
 
 class ReviewCreateView(generics.CreateAPIView):
     serializer_class = ReviewSerializer
-    pagination_class = CustomPagination 
+    pagination_class = CustomPagination
     renderer_classes = [CustomRenderer]
     permission_classes = [permissions.IsAuthenticated]
     queryset = Review.objects.all()
     
     def perform_create(self, serializer):
-        
+        # Ensure a user makes only ony one review per course
         try:
             course_identity = self.kwargs["pk"]
             course = get_object_or_404(Course, id=course_identity)

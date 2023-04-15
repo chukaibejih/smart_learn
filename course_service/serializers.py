@@ -1,4 +1,4 @@
-from .models import Course, Review
+from .models import Course, , InstructorSkill, SkillCertification
 from rest_framework import serializers
 
 
@@ -21,4 +21,19 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review 
         fields = "__all__"
+
+
+class InstructorSkillSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InstructorSkill
+        fields = "__all__"
+
+class SkillCertificationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SkillCertification
+        fields = "__all__"
+
+        
         
