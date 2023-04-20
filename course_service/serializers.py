@@ -1,3 +1,4 @@
+from .models import Course, InstructorSkill, SkillCertification, Review
 from .models import Course, Review, Module, Tag, TagModule, InstructorSkill, SkillCertification
 from rest_framework import serializers
 

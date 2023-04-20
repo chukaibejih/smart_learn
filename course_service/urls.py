@@ -10,10 +10,12 @@ router.register('tag-module', views.TagModuleView, basename='tag-modules')
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("<str:pk>/create-review/", views.ReviewCreateView.as_view(), name="create-review"),
-    path("<str:pk>/reviews/", views.ReviewListView.as_view(), name="review-list"),
+    path("course/<str:pk>/create-review/", views.ReviewCreateView.as_view(), name="create-review"),
+    path("course/<str:pk>/reviews/", views.ReviewListView.as_view(), name="review-list"),
     path("review/<str:pk>/", views.ReviewDetailView.as_view(), name="review-detail"),
-
+    path("instructor/skills/", views.InstructorSkillListView.as_view(), name="instructor-skills"),
+    path("instructor/skills/create-skill/", views.InstructorSkillCreateView.as_view(), name="create-skill"),
+    path("instructor/skills/<str:pk>/", views.InstructorSkillDetailView.as_view(), name="skill-details"),
     path('<str:course_pk>/modules/', views.ModuleView.as_view({'get': 'list', 'post': 'create'}), name='module-list'),
     path('<str:course_pk>/modules/<str:pk>/', views.ModuleView.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='module-detail'),
 ] 

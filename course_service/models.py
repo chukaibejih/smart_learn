@@ -133,6 +133,9 @@ class SkillCertification(models.Model):
     certification_date = models.DateField()
     certificate_file = models.ImageField(upload_to="user_service/instructor/certificates/", null=True, blank=True)
 
+    class Meta:
+        ordering = ("skill__instructor",)
+
     def __str__(self):
         return self.certification_name
 
