@@ -1,4 +1,4 @@
-from .models import Course, , InstructorSkill, SkillCertification
+from .models import Course, InstructorSkill, SkillCertification, Review
 from rest_framework import serializers
 
 

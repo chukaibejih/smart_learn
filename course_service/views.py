@@ -1,18 +1,20 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, validators, generics
-from common import permissions as custom_permissions
-from .models import Course, Review
-from user_service.models import InstructorProfile
 from django.contrib.auth import get_user_model
-from .serializers import CourseSerializer, ReviewSerializer
+from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django_auto_prefetching import AutoPrefetchViewSetMixin
 from rest_framework.filters import OrderingFilter, SearchFilter
+
+from common import permissions as custom_permissions
+from .models import Course, Review, InstructorSkill
+from user_service.models import InstructorProfile
+from .serializers import CourseSerializer, ReviewSerializer, InstructorSkillSerializer
 from .filters import CourseFilter
 from .pagination import CustomPagination
 from .renderers import CustomRenderer
-from django.db import IntegrityError
-from django.shortcuts import get_object_or_404
+
 
 User = get_user_model()
 # Create your views here.
@@ -51,12 +53,11 @@ class CourseViewSet(AutoPrefetchViewSetMixin,viewsets.ModelViewSet):
                                             "detail": "User must have is_instructor = True to create a course"
                                             }
                                             )
-        instructor_profile = InstructorProfile.objects.filter(user=self.request.user).first()
+        instructor_profile = get_object_or_404(InstructorProfile, user=self.request.user)
         serializer.save(instructor=instructor_profile) 
 
 class ReviewCreateView(generics.CreateAPIView):
     serializer_class = ReviewSerializer
-    pagination_class = CustomPagination
     renderer_classes = [CustomRenderer]
     permission_classes = [permissions.IsAuthenticated]
     queryset = Review.objects.all()
@@ -97,6 +98,47 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
         obj = get_object_or_404(Review, id=pk)
         self.check_object_permissions(self.request, obj)
         return obj 
+
+class InstructorSkillCreateView(generics.CreateAPIView):
+    serializer_class = InstructorSkillSerializer
+    permission_classes = [custom_permissions.IsCreatorOrReadOnly]
+    renderer_classes = [CustomRenderer]
+    queryset = InstructorSkill.objects.all()
+
+    def perform_create(self, serializer):
+        if not self.request.user.is_instructor:
+            raise validators.ValidationError(
+                                            {
+                                            "detail": "User must have is_instructor = True to create a course"
+                                            }
+                                            )
+        instructor_profile = get_object_or_404(InstructorProfile, user=self.request.user)
+        serializer.save(instructor=instructor_profile)
+
+class InstructorSkillListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
+    serializer_class = InstructorSkillSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [CustomRenderer]
+    pagination_classes = CustomPagination
+    queryset = InstructorSkill.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().filter(instructor__user__is_active=True)
+
+
+class InstructorSkillDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = InstructorSkillSerializer
+    permission_classes = [custom_permissions.IsCreatorOrReadOnly]
+    renderer_classes = [CustomRenderer]
+
+    def get_object(self):
+        pk = self.kwargs["pk"]
+        obj = get_object_or_404(Review, id=pk)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+
+
 
 
 

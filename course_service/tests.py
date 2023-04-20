@@ -37,14 +37,14 @@ class ModelSetup:
         self.course1 = Course.objects.create(
                                             name="Fullstack Python/Django course for beginners - 2023",
                                             instructor=self.instructor1,
-                                            difficulty=4,
+                                            difficulty="Intermediate",
                                             is_certified=True,
                                             is_available=True
                                            )
         self.course2 = Course.objects.create(
                                             name="Golang course for beginners - 2023",
                                             instructor=self.instructor2,
-                                            difficulty=4,
+                                            difficulty="Intermediate",
                                             is_certified=False,
                                             is_available=True
                                            )
@@ -61,7 +61,7 @@ class CourseTestCase(ModelSetup, APITestCase):
     def test_create_course(self):
         data = {
             "name": "Full Stack MERN course for beginners - 2023",
-            "difficulty": 4,
+            "difficulty": "Advanced",
             "is_certified": True,
             "is_available": True,
             "description": "None",
@@ -82,7 +82,7 @@ class CourseTestCase(ModelSetup, APITestCase):
         
         data = {
             "name": "Full Stack MERN course for beginners - 2023",
-            "difficulty": 4,
+            "difficulty": "Beginner",
             "is_certified": True,
             "is_available": True,
             "description": "None",
@@ -91,7 +91,7 @@ class CourseTestCase(ModelSetup, APITestCase):
         url = reverse("course-list")
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.json()["data"]["detail"], "User must have is_instructor = True to create a course")        
+        self.assertEqual(response.json()["data"]["detail"], "User must have is_instructor = True to create a course")
         
     def test_list_courses(self):
         url = reverse("course-list")
