@@ -156,5 +156,95 @@ class ReviewTestCase(ModelSetup, APITestCase):
         self.assertRaises(IntegrityError)
         
     
-        
-        
+ # Test cases for modules       
+class ModuleViewTestCase(ModelSetup, APITestCase):
+
+    # Inherited the ModelSetup class and called the setUp function
+    def setUp(self) -> None:
+        return super().common_model_setup()
+
+    # Test case to list the modules for a particular course
+    def test_list_modules(self):
+        url = reverse("module-list", args=[self.course1.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+        # Add a module to the course and check if it's returned
+        data = {
+            "name": "Introduction",
+            "description": "This module gives an introduction to the course",
+            "course": self.course1.id
+        }
+        self.client.post(url, data)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["name"], "Introduction")
+
+    # Test case to retrieve a module details by passing in the module id and the course id 
+    def test_retrieve_module(self):
+        module = Module.objects.create(
+            name="Loops",
+            description="This module explains loops",
+            course=self.course2
+        )
+        url = reverse("module-detail", args=[self.course2.id, module.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Loops")
+
+    # Test case to create a module for a course
+    def test_create_module(self):
+        data = {
+            "name": "Loops",
+            "description": "This module explains loops",
+            "course": self.course1.id
+        }
+        url = reverse("module-list", args=[self.course1.id])
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Module.objects.count(), 1)
+        self.assertEqual(Module.objects.first().name, "Loops")
+
+    # Test case to create a module for a course belonging to another instructor
+    def test_create_module_for_other_instructor_course(self):
+        data = {
+            "name": "Introduction",
+            "description": "This module gives an introduction to the course",
+            "course": self.course2.id
+        }
+        url = reverse("module-list", args=[self.course2.id])
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Module.objects.count(), 0)
+
+    # Test case for updating a module
+    def test_update_module(self):
+        module = Module.objects.create(
+            name="Loops",
+            description="This module explains loops",
+            course=self.course1
+        )
+        data = {
+            "name": "Loops in Python",
+            "description": "This module explains loops in Python",
+            "course": self.course1.id
+        }
+        url = reverse("module-detail", args=[self.course1.id, module.id])
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Module.objects.count(), 1)
+        self.assertEqual(Module.objects.first().name, "Loops in Python")
+
+    # Test case tpo delete a module belonging to a particular course
+    def test_delete_module(self):
+        module = Module.objects.create(
+            name="Loops",
+            description="This module explains loops",
+            course=self.course1
+        )
+        url = reverse("module-detail", args=[self.course1.id, module.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Module.objects.count(), 0)
