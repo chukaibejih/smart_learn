@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from user_service.models import User
+from user_service.models import User, StudentProfile, InstructorProfile
 
 
 class ConfirmEmailSerializer(serializers.ModelSerializer):
@@ -24,9 +24,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     """Override default token login to include user data"""
 
     def validate(self, attrs):
-        print("attrs----", attrs)
         data = super().validate(attrs)
-        print("data----", data)
         user = self.user
         if not user.is_verified:
             raise serializers.ValidationError({"error":"Email is not verified."})
@@ -37,6 +35,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 "email": self.user.email,
                 "first_name": self.user.first_name,
                 "last_name": self.user.last_name,
+                "is_instructor": self.user.is_instructor,
                 "is_superuser": self.user.is_superuser,
                 "is_staff": self.user.is_staff,
                 "is_verified": self.user.is_verified
@@ -52,7 +51,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     # Meta class to specify the model and its fields to be serialized
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'password', ] 
+        fields = ['id', 'email', 'first_name', 'last_name', 'password','is_instructor', ] 
 
     # Method to validate the email entered by the user
     def validate_email(self, value):
@@ -75,7 +74,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             password=validated_data['password'],
-            is_instructor=False,
+            is_instructor=validated_data['is_instructor'],
             is_verified=False
 
         )
@@ -87,4 +86,40 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'is_instructor', 'is_active', 'is_verified', 'created_at',]
+
+
+class StudentProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentProfile
+        fields = "__all__"
      
+
+class InstructorProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InstructorProfile
+        fields = "__all__"
+
+
+class RetrieveUserSerializer(serializers.ModelSerializer):
+    student_profile = serializers.SerializerMethodField()
+    instructor_profile = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'is_instructor', 'is_active', 'is_verified', 'created_at', 'student_profile', 'instructor_profile']
+
+    def get_student_profile(self, obj):
+        try:
+            profile = obj.student_profile
+            return StudentProfileSerializer(profile).data
+        except StudentProfile.DoesNotExist:
+            return None
+
+    def get_instructor_profile(self, obj):
+        try:
+            profile = obj.instructor_profile
+            return InstructorProfileSerializer(profile).data
+        except InstructorProfile.DoesNotExist:
+            return None

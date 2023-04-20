@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 
      # local apps
     'user_service.apps.UserServiceConfig',
+    'course_service.apps.CourseServiceConfig',
+    # 'module_service.apps.ModuleServiceConfig',
 
     # Third party apps
     'corsheaders',
@@ -51,6 +53,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
+    'phonenumber_field',
+    'django_countries',
+    'django_filters',
+    'debug_toolbar',
 ]
 
 AUTH_USER_MODEL = 'user_service.User'
@@ -58,6 +64,7 @@ AUTH_USER_MODEL = 'user_service.User'
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,6 +83,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@smartlearn'
 
@@ -105,7 +117,7 @@ WSGI_APPLICATION = 'smart_learning.wsgi.application'
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
         'NAME': os.getenv('DB_NAME'),
 
@@ -162,9 +174,20 @@ DJANGO_REST_MULTITOKENAUTH_REQUIRE_USABLE_PASSWORD = True
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'UPDATE_LAST_LOGIN': True,
+}
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "name": "Authorization",
+            "type": "apiKey",
+            "in": "header",
+        }
+    },
+    "USE_SESSION_AUTH": False,
 }
 
 
@@ -172,6 +195,8 @@ SIMPLE_JWT = {
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
