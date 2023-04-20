@@ -1,4 +1,4 @@
-from .models import Course, , InstructorSkill, SkillCertification
+from .models import Course, Review, Module, Tag, TagModule, InstructorSkill, SkillCertification
 from rest_framework import serializers
 
 
@@ -11,6 +11,23 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course 
+        fields = "__all__"
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = "__all__"
+
+class TagModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TagModule
+        fields = "__all__"
+        
+
+class ModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
         fields = "__all__"
         
 

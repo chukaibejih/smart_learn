@@ -26,7 +26,7 @@ from drf_yasg import openapi
 schema_view = get_schema_view(
     openapi.Info(
         title="Smart Learning API",
-        default_version="1.0",
+        default_version="v1",
         description="API documentation of Smart Learning",
       license=openapi.License(name="BSD License"),
    ),
@@ -38,7 +38,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('user_service.urls')),
     path('courses/', include('course_service.urls')),
-    path('modules/', include('module_service.urls')),
 
 
     path('__debug__/', include('debug_toolbar.urls')),
