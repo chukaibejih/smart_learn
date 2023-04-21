@@ -42,13 +42,14 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class InstructorSkillSerializer(serializers.ModelSerializer):
-
+    instructor = serializers.StringRelatedField()
+    
     class Meta:
         model = InstructorSkill
         fields = "__all__"
 
 class SkillCertificationSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = SkillCertification
         fields = "__all__"

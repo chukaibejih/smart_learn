@@ -7,8 +7,8 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 
 from common import permissions as custom_permissions
 from user_service.models import InstructorProfile
-from .models import Course, Review,InstructorSkill, Module, Tag, TagModule
-from .serializers import CourseSerializer, ReviewSerializer, InstructorSkillSerializer, ModuleSerializer, TagSerializer, TagModuleSerializer
+from .models import Course, Review,InstructorSkill, Module, Tag, TagModule, SkillCertification
+from .serializers import CourseSerializer, ReviewSerializer, InstructorSkillSerializer, SkillCertificationSerializer, ModuleSerializer, TagSerializer, TagModuleSerializer
 from .filters import CourseFilter
 from .pagination import CustomPagination
 from .renderers import CustomRenderer
@@ -161,15 +161,16 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class InstructorSkillCreateView(generics.CreateAPIView):
     serializer_class = InstructorSkillSerializer
-    permission_classes = [custom_permissions.IsCreatorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     renderer_classes = [CustomRenderer]
     queryset = InstructorSkill.objects.all()
 
     def perform_create(self, serializer):
+        # Ensure 
         if not self.request.user.is_instructor:
             raise validators.ValidationError(
                                             {
-                                            "detail": "User must have is_instructor = True to create a course"
+                                            "detail": "User must have is_instructor = True to add a Skill"
                                             }
                                             )
         instructor_profile = get_object_or_404(InstructorProfile, user=self.request.user)
@@ -179,8 +180,9 @@ class InstructorSkillListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
     serializer_class = InstructorSkillSerializer
     permission_classes = [permissions.IsAuthenticated]
     renderer_classes = [CustomRenderer]
-    pagination_classes = CustomPagination
+    pagination_class     = CustomPagination
     queryset = InstructorSkill.objects.all()
+    
 
     def get_queryset(self):
         return super().get_queryset().filter(instructor__user__is_active=True)
@@ -193,9 +195,44 @@ class InstructorSkillDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         pk = self.kwargs["pk"]
-        obj = get_object_or_404(Review, id=pk)
+        obj = get_object_or_404(InstructorSkill, id=pk)
         self.check_object_permissions(self.request, obj)
         return obj
+    
+class SkillCertificationCreateView(generics.CreateAPIView):
+    serializer_class = SkillCertificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [CustomRenderer]
+    queryset = SkillCertification.objects.all()
+    
+    def perform_create(self, serializer):
+        skill_id = self.kwargs["pk"]
+        instructor = get_object_or_404(InstructorProfile, user=self.request.user)
+        instructor_skills = InstructorSkill.objects.filter(instructor=instructor).exists()
+        
+        if not self.request.user.is_instructor or instructor_skills is False:
+            raise validators.ValidationError(
+                                            {
+                                            "detail": "User must have is_instructor = True or \
+                                                        have at least one skill to create a certificate"        
+                                            }
+                                            )
+        serializer.save(skill=skill_id)
+        
+    
+class SkillCretificationListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
+    serializer_class = SkillCertificationSerializer
+    pagination_class = CustomPagination
+    renderer_classes = [CustomRenderer]
+    queryset = SkillCertification.objects.all()
+    
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return super().get_queryset()
+        return super().get_queryset().filter(skill__instructor__user__is_active=True)
+    
+    
+
 
 
 

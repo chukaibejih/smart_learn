@@ -11,6 +11,9 @@ from password_generator import PasswordGenerator
 
 class ModelSetup:
     
+    """
+        Common setup cases for each test cases to avoid repitition of code.
+    """
     
     def common_model_setup(self):
         pwg = PasswordGenerator()
@@ -48,11 +51,13 @@ class ModelSetup:
                                             is_certified=False,
                                             is_available=True
                                            )
+        self.review = Review.objects.create(user=self.user1, course=self.course1, comment="Nice course", rating=4.3)
         refresh = RefreshToken.for_user(self.user1)
         access_token = refresh.access_token
         self.client.credentials(HTTP_AUTHORIZATION= f"Bearer {access_token}")
         
 
+# Course Test Cases
 class CourseTestCase(ModelSetup, APITestCase):
     
     def setUp(self):
@@ -129,7 +134,7 @@ class CourseTestCase(ModelSetup, APITestCase):
         self.assertEqual(response.json()["data"]["description"], "Django Course by John Doe")
         
     
-        
+# Review Test Cases
 class ReviewTestCase(ModelSetup, APITestCase):
     
     def setUp(self):
@@ -154,6 +159,28 @@ class ReviewTestCase(ModelSetup, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json()["data"]["detail"], "This user has already created a review about this course")
         self.assertRaises(IntegrityError)
+        
+    def test_list_reviews(self):
+        url = reverse("review-list", args=[self.course2.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_update_review(self):
+        data = {
+            "comment": "Average Course",
+            "rating": 3
+        }
+        url = reverse("review-detail", args=[self.review.pk])
+        response = self.client.put(url, data)
+        course = Course.objects.get(id=self.course1.pk)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(course.average_rating, 3.0)
+        
+    def test_delete_review(self):
+        url = reverse("review-detail", args=[self.review.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
         
     
  # Test cases for modules       
@@ -248,3 +275,5 @@ class ModuleViewTestCase(ModelSetup, APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Module.objects.count(), 0)
+
+    

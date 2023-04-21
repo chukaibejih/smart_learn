@@ -53,6 +53,9 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
         if hasattr(obj, "user"):
             return obj.user == request.user 
         
+        if hasattr(obj, "skill"):
+            return obj.skill.instructor == request.user
+        
 
 class IsCourseInstructor(permissions.BasePermission):
     message = 'You are not the instructor of this course.'
