@@ -84,6 +84,23 @@ class Module(models.Model):
         ordering = ['name']
 
 
+class Lesson(models.Model):
+    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+    module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='module')
+    video_url = models.URLField(blank=True, null=True)
+    audio_url = models.URLField(blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
+    resources = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
+
 class TagModule(models.Model):
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
