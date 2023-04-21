@@ -36,7 +36,7 @@ class Course(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ("price",)
+        ordering = ["price"]
         
     @property
     def get_instructor_fullname(self):
@@ -55,6 +55,7 @@ class Course(models.Model):
 
 
 class Tag(models.Model):
+    # Represents a tag for a module
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
     name = models.CharField(max_length=255)
 
@@ -63,6 +64,7 @@ class Tag(models.Model):
     
 
 class Module(models.Model):
+    # Represents a module in a course
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
     name = models.CharField(max_length=200)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course')
@@ -73,8 +75,6 @@ class Module(models.Model):
 
     tags = models.ManyToManyField(Tag, through='TagModule', blank=True)
 
-    def __str__(self):
-        return self.name
 
     class Meta:
         indexes = [
@@ -83,8 +83,20 @@ class Module(models.Model):
         ]
         ordering = ['name']
 
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        # Delete old thumbnail when making an update to the thumbnail 
+        with contextlib.suppress(Exception):
+            old = Module.objects.get(id=self.id)
+            if old.thumbnail != self.thumbnail:
+                old.thumbnail.delete(save=False)
+        super().save(*args, **kwargs)  
+
 
 class Lesson(models.Model):
+    # Represents a lesson in a module
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
     name = models.CharField(max_length=200)
     description = models.TextField()
@@ -96,19 +108,23 @@ class Lesson(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
-
-
+    
 
 class TagModule(models.Model):
+    # Represents the many-to-many relationship between tags and modules
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     module = models.ForeignKey('Module', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.tag.name} - {self.module.name}"
-    
+      
     
 class Review(models.Model):
     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
