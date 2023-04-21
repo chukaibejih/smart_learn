@@ -35,6 +35,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 "email": self.user.email,
                 "first_name": self.user.first_name,
                 "last_name": self.user.last_name,
+                "is_instructor": self.user.is_instructor,
                 "is_superuser": self.user.is_superuser,
                 "is_staff": self.user.is_staff,
                 "is_verified": self.user.is_verified
