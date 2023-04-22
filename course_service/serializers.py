@@ -1,5 +1,4 @@
-from .models import Course, InstructorSkill, SkillCertification, Review
-from .models import Course, Review, Module, Tag, TagModule, InstructorSkill, SkillCertification
+from .models import Course, Review, Module, Lesson, Tag, TagModule, InstructorSkill, SkillCertification
 from rest_framework import serializers
 
 
@@ -30,7 +29,12 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
         fields = "__all__"
-        
+
+
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = "__all__"        
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()

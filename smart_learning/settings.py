@@ -45,7 +45,6 @@ INSTALLED_APPS = [
      # local apps
     'user_service.apps.UserServiceConfig',
     'course_service.apps.CourseServiceConfig',
-    # 'module_service.apps.ModuleServiceConfig',
 
     # Third party apps
     'corsheaders',

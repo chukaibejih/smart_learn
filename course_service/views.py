@@ -2,23 +2,47 @@ from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions, generics, serializers, filters
+from rest_framework import (
+    viewsets,
+    permissions,
+    generics,
+    serializers,
+    filters,
+    validators,
+)
 from rest_framework.filters import OrderingFilter, SearchFilter
-
 from common import permissions as custom_permissions
 from user_service.models import InstructorProfile
-from .models import Course, Review,InstructorSkill, Module, Tag, TagModule, SkillCertification
-from .serializers import CourseSerializer, ReviewSerializer, InstructorSkillSerializer, SkillCertificationSerializer, ModuleSerializer, TagSerializer, TagModuleSerializer
+from .models import (
+    Course,
+    Review,
+    InstructorSkill,
+    Module,
+    Lesson,
+    Tag,
+    TagModule,
+    SkillCertification,
+)
+from .serializers import (
+    CourseSerializer,
+    ReviewSerializer,
+    LessonSerializer,
+    InstructorSkillSerializer,
+    SkillCertificationSerializer,
+    ModuleSerializer,
+    TagSerializer,
+    TagModuleSerializer,
+)
 from .filters import CourseFilter
 from .pagination import CustomPagination
 from .renderers import CustomRenderer
 from django_auto_prefetching import AutoPrefetchViewSetMixin
-from rest_framework import validators
 
 User = get_user_model()
-# Create your views here.
+
 
 class CourseViewSet(AutoPrefetchViewSetMixin,viewsets.ModelViewSet):
+
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     search_fields = ["name", "instructor__user__first_name", "instructor__user__last_name"]
@@ -56,7 +80,8 @@ class CourseViewSet(AutoPrefetchViewSetMixin,viewsets.ModelViewSet):
         serializer.save(instructor=instructor_profile) 
 
 
-class ModuleView(viewsets.ModelViewSet):
+class ModuleView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
+
     # Set the queryset and serializer_class
     queryset = Module.objects.all()
     serializer_class = ModuleSerializer
@@ -102,14 +127,64 @@ class ModuleView(viewsets.ModelViewSet):
         serializer.save()
 
 
+class LessonView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
 
-class TagView(viewsets.ModelViewSet):
+    # set the queryset and serializer class
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+
+    # Get the module id and lesson id from the URL parameter
+    def get_queryset(self):
+        module_id = self.kwargs.get('module_pk')
+        lesson_id = self.kwargs.get('pk')
+
+        # if we have both module id and lesson id, get the particular lesson of a particular module
+        if module_id and lesson_id:
+            queryset = Lesson.objects.filter(module=module_id, id=lesson_id)
+
+        # if we have only module id, get all the lessons of that perticular module
+        elif module_id:
+            queryset = Lesson.objects.filter(module=module_id)
+        else:
+            queryset = Module.objects.all()
+    
+        # if the user is a staff, return all lesson
+        if self.request.user.is_staff:
+            return queryset
+        # Otherwise, return only the lessons whose course instructor is active
+        return queryset.filter(module__course__instructor__user__is_active=True)
+
+    def get_permissions(self):
+        # Set the permission_classes based on the action
+        permission_classes = [permissions.IsAuthenticated, custom_permissions.IsCourseInstructor]
+        if self.action in ['list', 'retrieve']:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        # Set the course instructor to the current authenticated user
+        course_instructor = self.request.user.instructor_profile
+        module = serializer.validated_data['module']
+        course = module.course
+
+        # Check if the course instructor is creating the module for their own course
+        if course.instructor != course_instructor:
+             raise serializers.ValidationError("You can only create modules for courses that you are an instructor of.")
+
+        # Save the module
+        serializer.save()
+
+
+
+class TagView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
+
     # Set the queryset and serializer_class
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
 
-class TagModuleView(viewsets.ModelViewSet):
+class TagModuleView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
+
     # Set the queryset and serializer_class
     queryset = TagModule.objects.all()
     serializer_class = TagModuleSerializer
@@ -117,6 +192,7 @@ class TagModuleView(viewsets.ModelViewSet):
 
 
 class ReviewCreateView(generics.CreateAPIView):
+
     serializer_class = ReviewSerializer
     renderer_classes = [CustomRenderer]
     permission_classes = [permissions.IsAuthenticated]
@@ -137,6 +213,7 @@ class ReviewCreateView(generics.CreateAPIView):
             
             
 class ReviewListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
+
     serializer_class = ReviewSerializer 
     pagination_class = CustomPagination 
     renderer_classes = [CustomRenderer]
