@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
@@ -216,8 +216,10 @@ class SkillCertificationCreateView(generics.CreateAPIView):
                                             "detail": "User must have is_instructor = True to create a certificate"        
                                             }
                                             )
-        serializer.save(skill=instance)
-        
+        try:    
+            serializer.save(skill=instance)
+        except IntegrityError:
+            raise validators.ValidationError("You can only provide one certificate for each skill !")
     
 class SkillCertificationListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
     serializer_class = SkillCertificationSerializer
@@ -226,10 +228,15 @@ class SkillCertificationListView(AutoPrefetchViewSetMixin, generics.ListAPIView)
     queryset = SkillCertification.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     
-    # def get_queryset(self):
-    #     if self.request.user.is_staff:
-    #         return super().get_queryset()
-    #     return super().get_queryset().filter(skill__instructor__user__is_active=True)
+    def get_queryset(self):
+        instructor_id = self.request.query_params.get("instructor_id")
+        
+        if instructor_id:
+            return super().get_queryset().filter(skill__instructor__user__is_active=True, \
+                                                    skill__instructor__id=instructor_id)
+        if self.request.user.is_staff:
+            return super().get_queryset()
+        return super().get_queryset().none()
     
     
 class SkillCertificationDetailView(generics.RetrieveUpdateDestroyAPIView):
