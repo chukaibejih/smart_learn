@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Review, Tag, TagModule, Module, InstructorSkill, SkillCertification
+from .models import Course, Review, Tag, TagModule, Module, Lesson, InstructorSkill, SkillCertification
 # Register your models here.
 
 @admin.register(Course)
@@ -34,6 +34,13 @@ class ModuleAdmin(admin.ModelAdmin):
     list_filter = ['course']
     search_fields = ['name', 'description']
     autocomplete_fields = ['tags']
+
+
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'module', 'created_at']
+    list_filter = ['module']
+    search_fields = ['name', 'description']
     
     
 @admin.register(InstructorSkill)
