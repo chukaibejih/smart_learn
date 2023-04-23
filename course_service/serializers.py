@@ -53,10 +53,15 @@ class InstructorSkillSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class SkillCertificationSerializer(serializers.ModelSerializer):
+    instructor = serializers.SerializerMethodField()
+    
+    def get_instructor(self, obj):
+        return obj.skill.instructor.user.email  
     
     class Meta:
         model = SkillCertification
         fields = "__all__"
+        
 
         
         
