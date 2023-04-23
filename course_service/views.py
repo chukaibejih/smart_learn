@@ -296,7 +296,11 @@ class SkillCertificationCreateView(generics.CreateAPIView):
         try:    
             serializer.save(skill=instance)
         except IntegrityError:
-            raise validators.ValidationError("You can only provide one certificate for each skill !")
+            raise validators.ValidationError(
+                                            {
+                                            "detail": "This user has already created a review about this course"
+                                            }
+                                            )
     
 class SkillCertificationListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
     serializer_class = SkillCertificationSerializer
@@ -327,6 +331,7 @@ class SkillCertificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         obj = get_object_or_404(SkillCertification, skill__id=skill_id, id=cert_id)
         self.check_object_permissions(self.request, obj)
         return obj 
+    
     
     
     

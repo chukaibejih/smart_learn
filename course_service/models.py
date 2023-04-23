@@ -170,7 +170,7 @@ class SkillCertification(models.Model):
         ordering = ("skill__instructor",)
 
     def __str__(self):
-        return self.certification_name
+        return f"{self.certification_name} for {self.skill.skill_name} "
 
     def save(self, *args, **kwargs):
         """Deletes old cover_image when making an update to cover_image"""
