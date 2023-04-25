@@ -276,4 +276,38 @@ class ModuleViewTestCase(ModelSetup, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Module.objects.count(), 0)
 
+
+class InstructorSkillTestCase(ModelSetup, APITestCase):
     
+    def setUp(self):
+    
+        super().common_model_setup()
+    
+    def test_create_skill(self):
+        data = {
+            "skil_name": "Frontend Development",
+            "skill_level": 4
+        }
+        url = reverse("create-skill")
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+    def test_create_skill_by_non_instructor(self):
+        self.user1.is_instructor = False
+        self.user1.save()
+        
+        data = {
+            "skil_name": "Frontend Development",
+            "skill_level": 4
+        }
+        url = reverse("create-skill")
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_list_skill_data(self):
+        url = reverse("instructor-skills")
+        response = self.client.get(url)
+        print(response.json())
+        
+        
+        
