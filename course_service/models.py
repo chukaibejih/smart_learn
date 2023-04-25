@@ -141,6 +141,7 @@ class Review(models.Model):
     
     class Meta:
         unique_together = ("user", "course")
+        ordering = ["updated_at"]
         
     def __str__(self):
         return f"Comment by {self.user.email} on {self.course.name}"
@@ -152,9 +153,12 @@ class InstructorSkill(models.Model):
     skill_name = models.CharField(max_length=40, null=True, blank=True)
     skill_level = models.PositiveIntegerField(validators=[
                                                      MinValueValidator(0),
-                                                     MaxValueValidator(5)
+                                                     MaxValueValidator(10)
                                                     ]
                                                     )
+    
+    class Meta:
+        ordering = ["-skill_level"]
 
     def __str__(self):
         return self.skill_name

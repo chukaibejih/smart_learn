@@ -51,7 +51,7 @@ class ModelSetup:
                                             is_certified=False,
                                             is_available=True
                                            )
-        self.review = Review.objects.create(user=self.user1, course=self.course1, comment="Nice course", rating=4.3)
+        
         refresh = RefreshToken.for_user(self.user1)
         access_token = refresh.access_token
         self.client.credentials(HTTP_AUTHORIZATION= f"Bearer {access_token}")
@@ -138,7 +138,9 @@ class CourseTestCase(ModelSetup, APITestCase):
 class ReviewTestCase(ModelSetup, APITestCase):
     
     def setUp(self):
-        return super().common_model_setup()
+        super().common_model_setup()
+        self.review = Review.objects.create(user=self.user1, course=self.course1,\
+                                            comment="Nice course", rating=4.3)
     
     def test_create_review(self):
         from django.db import IntegrityError
@@ -280,8 +282,17 @@ class ModuleViewTestCase(ModelSetup, APITestCase):
 class InstructorSkillTestCase(ModelSetup, APITestCase):
     
     def setUp(self):
-    
         super().common_model_setup()
+        self.skill1 = InstructorSkill.objects.create(
+                                                     instructor=self.instructor1,
+                                                     skill_name="DevOps Engineering",
+                                                     skill_level=5   
+                                                    )
+        self.skill2 = InstructorSkill.objects.create(
+                                                     instructor=self.instructor1,
+                                                     skill_name="Backend Development",
+                                                     skill_level=5   
+                                                    )
     
     def test_create_skill(self):
         data = {
@@ -307,7 +318,24 @@ class InstructorSkillTestCase(ModelSetup, APITestCase):
     def test_list_skill_data(self):
         url = reverse("instructor-skills")
         response = self.client.get(url)
-        print(response.json())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()["data"]["results"]), InstructorSkill.objects.count())
         
         
+    def test_retrieve_skill_data(self):
+        url = reverse("skill-details", args=[self.skill1.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_partial_update_skill_data(self):
+        data = {
+            "skill_level": 4
+        }
+        url = reverse("skill-details", args=[self.skill1.pk])
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         
+    def test_delete_skill_data(self):
+        url = reverse("skill-details", args=[self.skill1.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
