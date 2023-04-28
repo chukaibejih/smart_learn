@@ -1,4 +1,14 @@
-from .models import Course, Review, Module, Lesson, Tag, TagModule, InstructorSkill, SkillCertification
+from .models import (
+ Course, 
+ Review, 
+ Module, 
+ Lesson, 
+ Tag, 
+ TagModule, 
+ InstructorSkill, 
+ SkillCertification,
+ Quiz
+ )
 from rest_framework import serializers
 
 
@@ -62,6 +72,10 @@ class SkillCertificationSerializer(serializers.ModelSerializer):
         model = SkillCertification
         fields = "__all__"
         
-
         
-        
+class QuizSerializer(serializers.ModelSerializer):
+    lesson = serializers.StringRelatedField()
+    
+    class Meta:
+        model = Quiz 
+        fields = "__all__"

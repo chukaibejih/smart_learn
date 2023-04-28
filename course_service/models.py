@@ -185,4 +185,19 @@ class SkillCertification(models.Model):
         super().save(*args, **kwargs)
 
 
-
+class Quiz(models.Model):
+    id = ShortUUIDField(primary_key=True, max_length=6, length=6, editable=False)
+    name = models.CharField(max_length=70)
+    description = models.TextField()
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="quizes")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ("updated_at",)
+        verbose_name_plural = "Quizes"
+    
+    def __str__(self):
+        return self.name 
+    
+    

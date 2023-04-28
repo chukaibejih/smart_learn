@@ -7,7 +7,6 @@ from rest_framework import (
     permissions,
     generics,
     serializers,
-    filters,
     validators,
 )
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -22,6 +21,7 @@ from .models import (
     Tag,
     TagModule,
     SkillCertification,
+    Quiz
 )
 from .serializers import (
     CourseSerializer,
@@ -32,6 +32,7 @@ from .serializers import (
     ModuleSerializer,
     TagSerializer,
     TagModuleSerializer,
+    QuizSerializer
 )
 from .filters import CourseFilter
 from .pagination import CustomPagination
@@ -298,7 +299,7 @@ class SkillCertificationCreateView(generics.CreateAPIView):
         except IntegrityError:
             raise validators.ValidationError(
                                             {
-                                            "detail": "This user has already created a review about this course"
+                                            "detail": "There is a certificate for this skill already!"
                                             }
                                             )
     
@@ -331,6 +332,49 @@ class SkillCertificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         obj = get_object_or_404(SkillCertification, skill__id=skill_id, id=cert_id)
         self.check_object_permissions(self.request, obj)
         return obj 
+    
+
+class QuizView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
+    serializer_class = QuizSerializer
+    queryset = Quiz.objects.all()
+    pagination_class = CustomPagination 
+    renderer_classes = [CustomRenderer]
+    permission_classes = []
+    
+    def get_permissions(self):
+        if self.action == "create":
+            self.permission_classes = [permissions.IsAuthenticated]  
+        elif self.action in ["update", "partial_update", "destroy"]:
+            self.permission_classes = [custom_permissions.IsCreatorOrReadOnly]
+        else:
+            self.permission_classes = [permissions.AllowAny]
+            
+        return super().get_permissions()
+    
+    def get_queryset(self):
+        lesson_id = self.kwargs["lesson_pk"]
+        if self.request.user.is_staff:
+            return super().get_queryset()
+        
+        if lesson_id:
+            return super().get_queryset().filter(  
+                                                 lesson=lesson_id, 
+                                                 lesson__module__course__instructor__user__is_active=True
+                                                )
+        return super().get_queryset().none()
+            
+    def perform_create(self, serializer):
+        instructor = get_object_or_404(InstructorProfile, user=self.request.user)
+        lesson = get_object_or_404(Lesson, module__course__instructor=instructor)
+
+        if not self.request.user.is_instructor:
+            raise validators.ValidationError(
+                                            {
+                                            "detail": "User must have is_instructor = True to create a certificate"        
+                                            }
+                                            )
+        serializer.save(lesson=lesson)
+    
     
     
     

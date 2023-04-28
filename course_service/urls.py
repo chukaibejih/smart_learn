@@ -27,6 +27,8 @@ urlpatterns = [
 
     path('<str:course_pk>/modules/<str:module_pk>/lesson/', views.LessonView.as_view({'get': 'list', 'post': 'create'}), name='lesson-list'),
     path('<str:course_pk>/modules/<str:module_pk>/lesson/<str:pk>/', views.LessonView.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='lesson-detail'),
+    path('<str:course_pk>/modules/<str:module_pk>/lesson/<str:lesson_pk>/quiz/', views.QuizView.as_view({'get': 'list', 'post': 'create'}), name='quiz-list'),
+    path('<str:course_pk>/modules/<str:module_pk>/lesson/<str:lesson_pk>/quiz/<str:pk>/', views.QuizView.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='quiz-detail'),
 ] 
 
 
