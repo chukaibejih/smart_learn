@@ -141,6 +141,7 @@ class Review(models.Model):
     
     class Meta:
         unique_together = ("user", "course")
+        ordering = ["updated_at"]
         
     def __str__(self):
         return f"Comment by {self.user.email} on {self.course.name}"
@@ -152,9 +153,12 @@ class InstructorSkill(models.Model):
     skill_name = models.CharField(max_length=40, null=True, blank=True)
     skill_level = models.PositiveIntegerField(validators=[
                                                      MinValueValidator(0),
-                                                     MaxValueValidator(5)
+                                                     MaxValueValidator(10)
                                                     ]
                                                     )
+    
+    class Meta:
+        ordering = ["-skill_level"]
 
     def __str__(self):
         return self.skill_name
@@ -170,7 +174,7 @@ class SkillCertification(models.Model):
         ordering = ("skill__instructor",)
 
     def __str__(self):
-        return self.certification_name
+        return f"{self.certification_name} for {self.skill.skill_name} "
 
     def save(self, *args, **kwargs):
         """Deletes old cover_image when making an update to cover_image"""
@@ -181,4 +185,19 @@ class SkillCertification(models.Model):
         super().save(*args, **kwargs)
 
 
-
+class Quiz(models.Model):
+    id = ShortUUIDField(primary_key=True, max_length=6, length=6, editable=False)
+    name = models.CharField(max_length=70)
+    description = models.TextField()
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="quizes")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ("updated_at",)
+        verbose_name_plural = "Quizes"
+    
+    def __str__(self):
+        return self.name 
+    
+    

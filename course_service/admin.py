@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import Course, Review, Tag, TagModule, Module, Lesson, InstructorSkill, SkillCertification
+from .models import (
+    Course, 
+    Review, 
+    Tag, 
+    TagModule, 
+    Module, 
+    Lesson, 
+    InstructorSkill, 
+    SkillCertification,
+    Quiz
+)
 # Register your models here.
 
 @admin.register(Course)
@@ -53,3 +63,8 @@ class InstructorSkillAdmin(admin.ModelAdmin):
 class SkillCertificationAdmin(admin.ModelAdmin):
     list_display = ["skill", "certification_name", "certification_date"]
     list_filter = ["skill"]
+    
+@admin.register(Quiz)
+class QuizAdmin(admin.ModelAdmin):
+    list_display = ["name", "updated_at"]
+    list_filter = ["updated_at", "created_at"]
