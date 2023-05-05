@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from user_service.models import User, StudentProfile, InstructorProfile
+from user_service.models import User, StudentProfile, InstructorProfile, SMSCode
 
 
 class ConfirmEmailSerializer(serializers.ModelSerializer):
@@ -12,6 +12,13 @@ class ConfirmEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['token', 'uidb64']
+        
+class ConfirmSmsSerializer(serializers.ModelSerializer):
+      number = serializers.CharField(max_length=6, required=True)
+      
+      class Meta:
+        model = SMSCode
+        fields = ['number']
         
 
 class ChangePasswordSerializer(serializers.Serializer):
