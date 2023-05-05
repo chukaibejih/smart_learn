@@ -45,6 +45,7 @@ INSTALLED_APPS = [
      # local apps
     'user_service.apps.UserServiceConfig',
     'course_service.apps.CourseServiceConfig',
+    'enrollment_service.apps.EnrollmentServiceConfig',
 
     # Third party apps
     'corsheaders',
@@ -189,6 +190,7 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
+STRIPE_SECRET = os.getenv('STRIPE_SECRET')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
