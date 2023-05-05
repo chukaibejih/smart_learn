@@ -1,6 +1,8 @@
 # Smart Learning(Work In Progress)
 
-This is an API for a Smart Learning project built with Django Rest Framework (DRF). The API allows users to enroll in courses, complete lessons and quizzes, and track their progress. Instructors can create and manage courses, lessons, and quizzes, as well as view information about enrolled users.
+This Smart Learning API is built with Django Rest Framework (DRF) and provides a powerful set of features for both users and instructors. With this API, users can enroll in courses, complete modules, lessons and quizzes. Instructors can create and manage courses, modules, lessons, and quizzes, as well as view information about enrolled users.
+
+This Smart Learning API is designed to be flexible and easy to use. Using Swagger/OpenAPI to provide you with a clean and intuitive API interface that makes it easy for developers to integrate with other systems. Whether you're building a mobile app, a web-based learning platform, or something else entirely.
 
 System Architecture
 ---------------
@@ -26,6 +28,37 @@ To run the API locally, follow these steps:
 5.  Set up the database: `python manage.py migrate`
 6.  Create a superuser account: `python manage.py createsuperuser`
 7.  Start the development server: `python manage.py runserver`
+
+
+Functional Requirements Definition
+--------------
+
+Functional requirements specify the actions that a software system or application should take to satisfy the user's needs and business objectives. They describe the system's functions, features, and capabilities, as well as how it should respond under different circumstances.
+
+- User Authentication: The API should provide a user registraion, log-in and email confimation functionality, including password recovery features. We’ll ensure that passwords are securely stored and hashed using Django’s built-in authentication system.
+
+- Profile Management: Users should be able to manage and update their profile information, including profile pictures.
+
+- Course Enrollment: The API should allow users to enroll in courses. 
+
+- Instructor Course Creation: Instructors should be able to create new courses, add modules, lessons, and quizzes to them using the API.
+
+- Instructor Course Management: Instructors should be able to manage their courses, including editing or deleting course content, modules, lessons, and quizzes using the API.
+
+- Payment: Users should be able to make course payments through the API after enrolling.
+
+
+Tech Stack
+--------------
+
+- Language: Python 3.10
+- Framework: Django 4.0+
+- Database: PostgreSQL
+- API USED: Strip - Test mode
+- Testing: Django Test Framework
+- Test Coverage: 80%+
+- Development Methodology: TDD (Test Driven Development)
+
 
 Authentication
 --------------
