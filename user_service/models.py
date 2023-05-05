@@ -32,6 +32,10 @@ class User(AbstractUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    @property
+    def get_user_fullname(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class StudentProfile(models.Model):
