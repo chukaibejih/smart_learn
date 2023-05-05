@@ -68,7 +68,7 @@ def create_user_profile(sender, instance, created, **kwargs):
             InstructorProfile.objects.create(user=instance)
             
             
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=get_user_model())
 def post_save_generate_code(sender, instance, created, *args, **kwargs):
     if created:
         SMSCode.objects.create(user=instance)
