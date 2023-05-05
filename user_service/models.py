@@ -91,3 +91,17 @@ class InstructorProfile(models.Model):
             if old.profile_picture != self.profile_picture:
                 old.profile_picture.delete(save=False)
         super().save(*args, **kwargs)
+        
+class SMSCode(models.Model):
+     id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='smscode')
+    number = models.CharField(max_length=6, blank=False, null=False)
+
+    def __str__(self):
+        return f'{self.user.username}-{self.number}'
+
+    def save(self, *args, **kwargs):
+        verification_code = random.randint(100000, 999999)
+        self.number = str(verification_code)
+
+        super().save(*args, **kwargs)
