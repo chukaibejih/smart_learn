@@ -13,7 +13,7 @@ from smart_learning.settings import DEFAULT_FROM_EMAIL
 from dotenv import load_dotenv
 load_dotenv()
 
-from .models import StudentProfile, InstructorProfile
+from .models import StudentProfile, InstructorProfile, SMSCode
 
 
 @receiver(post_save, sender=get_user_model(), dispatch_uid="unique_identifier")
@@ -66,3 +66,9 @@ def create_user_profile(sender, instance, created, **kwargs):
             StudentProfile.objects.create(user=instance)
         else:
             InstructorProfile.objects.create(user=instance)
+            
+            
+@receiver(post_save, sender=get_user_model())
+def post_save_generate_code(sender, instance, created, *args, **kwargs):
+    if created:
+        SMSCode.objects.create(user=instance)

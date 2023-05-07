@@ -6,7 +6,7 @@ from django_countries.fields import CountryField
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
-
+import random
 from user_service.manager import UserManager
 
 
@@ -18,6 +18,7 @@ class User(AbstractUser, PermissionsMixin):
     last_name = models.CharField(max_length=50)
     is_instructor = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
+    enable_two_factor_authentication = models.BooleanField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
@@ -94,4 +95,18 @@ class InstructorProfile(models.Model):
             old = InstructorProfile.objects.get(id=self.id)
             if old.profile_picture != self.profile_picture:
                 old.profile_picture.delete(save=False)
+        super().save(*args, **kwargs)
+        
+class SMSCode(models.Model):
+    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='smscode')
+    number = models.CharField(max_length=6, blank=False, null=False)
+
+    def __str__(self):
+        return f'{self.user.username}-{self.number}'
+
+    def save(self, *args, **kwargs):
+        verification_code = random.randint(100000, 999999)
+        self.number = str(verification_code)
+
         super().save(*args, **kwargs)
