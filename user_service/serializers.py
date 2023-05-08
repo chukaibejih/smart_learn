@@ -19,7 +19,7 @@ class ConfirmSmsSerializer(serializers.ModelSerializer):
 
                                     validators=[RegexValidator(r'^\d{6}$'),
 
-                                                MinalueValidator(999999),
+                                                MinaValueValidator(999999),
 
                                                 MaxValueValidator(100000)])
         
