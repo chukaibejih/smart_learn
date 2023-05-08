@@ -279,6 +279,15 @@ class ModuleViewTestCase(ModelSetup, APITestCase):
         self.assertEqual(Module.objects.count(), 0)
 
 
+# class LessonTestCase(ModelSetup, APITestCase):
+#     # Inherited the ModelSetup class and called the setUp function
+#     def setUp(self) -> None:
+#         return super().common_model_setup()
+    
+#     def test_list_lesson(self):
+#         url = reverse("lesson-list", args=[self.course.id, module.id, lesson.id])
+
+
 class InstructorSkillTestCase(ModelSetup, APITestCase):
     
     def setUp(self):
