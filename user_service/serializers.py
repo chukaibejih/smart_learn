@@ -2,6 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
+from rest_framework.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from user_service.models import User, StudentProfile, InstructorProfile, SMSCode
 
 
@@ -14,8 +15,14 @@ class ConfirmEmailSerializer(serializers.ModelSerializer):
         fields = ['token', 'uidb64']
         
 class ConfirmSmsSerializer(serializers.ModelSerializer):
-      number = serializers.CharField(max_length=6, required=True)
-      
+     number = serializers.CharField(max_length=6, required=True,
+
+                                    validators=[RegexValidator(r'^\d{6}$'),
+
+                                                MinalueValidator(999999),
+
+                                                MaxValueValidator(100000)])
+        
       class Meta:
         model = SMSCode
         fields = ['number']
