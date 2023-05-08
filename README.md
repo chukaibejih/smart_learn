@@ -25,9 +25,10 @@ To run the API locally, follow these steps:
 2.  Create a virtual environment: `python -m venv env`
 3.  Activate the virtual environment: `source env/bin/activate`
 4.  Install dependencies: `pip install -r requirements.txt`
-5.  Set up the database: `python manage.py migrate`
-6.  Create a superuser account: `python manage.py createsuperuser`
-7.  Start the development server: `python manage.py runserver`
+5.  Change `.env.templates` to .env and setup you environment variables. 
+6.  Set up the database: `python manage.py migrate`
+7.  Create a superuser account: `python manage.py createsuperuser`
+8.  Start the development server: `python manage.py runserver`
 
 
 Functional Requirements Definition
@@ -110,6 +111,19 @@ The following endpoints are available in the API:
 -   `/api/courses/<course_id>/lessons/<lesson_id>/quizzes/` (POST): to allow an instructor to create a new quiz within a specific lesson.
 -   `/api/courses/<course_id>/lessons/<lesson_id>/quizzes/<quiz_id>/` (PUT, PATCH, DELETE): to allow an instructor to update or delete a specific quiz within a lesson.
 -   `/api/courses/<course_id>/enrollments/` (GET): to retrieve a list of all users
+
+
+Limitations
+------------
+
+While the Smart Learning API is designed to be a flexible and powerful tool for users and instructors alike, there are some limitations to consider when using this system:
+
+- Lack of support for multimedia content: At the moment, the API does not support multimedia content such as videos, images or audio files. This can limit the types of courses that can be offered through the platform.
+- Limited payment options: Currently, the only payment option available for users is through the Stripe API. This may not be ideal for some users who prefer to use other payment methods.
+- No support for multiple languages: The API currently only supports content in English. This may be a limitation for users who prefer to learn in other languages.
+- Limited reporting and analytics: While the API provides some basic reporting and analytics features, these may not be sufficient for more advanced reporting needs.
+- Limited customization options: The API provides a basic set of features and customization options, but may not be ideal for users who require a highly customized learning platform.
+
 
 Contributing
 ------------
