@@ -1,0 +1,1 @@
+from course_service.pagination import CustomPagination
