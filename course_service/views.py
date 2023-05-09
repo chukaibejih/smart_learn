@@ -35,7 +35,7 @@ from .serializers import (
     QuizSerializer
 )
 from .filters import CourseFilter
-from .pagination import CustomPagination
+from common.pagination import CustomPagination
 from .renderers import CustomRenderer
 from django_auto_prefetching import AutoPrefetchViewSetMixin
 

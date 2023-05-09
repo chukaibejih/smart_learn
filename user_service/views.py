@@ -13,6 +13,7 @@ from user_service.serializers import (
     ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, InstructorProfileSerializer
 )
 
+from common.pagination import CustomPagination
 from common import permissions as custom_permissions
 User = get_user_model()
 
@@ -67,6 +68,7 @@ class UserViewSet(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = RetrieveUserSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = CustomPagination
 
     # Define a get_queryset method that returns only active users for non-superusers
     def get_queryset(self):
@@ -102,6 +104,7 @@ class StudentProfileViewset(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ["get", "patch"]
     search_fields = ["user__first_name", "user__last_name", "user__email"]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         if self.request.user.is_staff or self.request.user.is_superuser:
@@ -130,6 +133,7 @@ class InstructorProfileViewset(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ["get", "patch"]
     search_fields = ["user__first_name", "user__last_name", "user__email"]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         if self.request.user.is_staff or self.request.user.is_superuser:
