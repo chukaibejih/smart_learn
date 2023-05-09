@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from rest_framework.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.password_validation import validate_password
 from user_service.models import User, StudentProfile, InstructorProfile, SMSCode
@@ -17,10 +17,10 @@ class ConfirmEmailSerializer(serializers.ModelSerializer):
         fields = ['token', 'uidb64']
         
 class ConfirmSmsSerializer(serializers.ModelSerializer):
-     number = serializers.CharField(max_length=6, required=True,
-                                    validators=[MinaValueValidator(999999),
-                                                MaxValueValidator(100000)])
-     def validate_number(self, value):
+    number = serializers.CharField(max_length=6, required=True,
+                                    validators=[MinValueValidator(100000),
+                                                MaxValueValidator(999999)])
+    def validate_number(self, value):
         if not value.isdigit():
             raise serializers.ValidationError("Number must be a string of digits.")
   
@@ -35,7 +35,7 @@ class ConfirmSmsSerializer(serializers.ModelSerializer):
         
         return value
         
-      class Meta:
+    class Meta:
         model = SMSCode
         fields = ['number']
         
