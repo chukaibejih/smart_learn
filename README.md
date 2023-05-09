@@ -31,6 +31,24 @@ To run the API locally, follow these steps:
 8.  Start the development server: `python manage.py runserver`
 
 
+Running Tests
+---------------
+
+Tests are organized into different files within the app's `tests` directory. Here's how to run them:
+
+1. To run all the tests, use the following command:
+
+    ```
+    python manage.py test
+    ```
+
+2. To run a single test file, use the following command (replacing `<app_name>` and `<test_file>` with the appropriate values):
+
+    ```
+    python manage.py test <app_name>.tests.<test_file>
+    ```
+
+
 Functional Requirements Definition
 --------------
 
