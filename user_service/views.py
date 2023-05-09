@@ -13,7 +13,7 @@ from user_service.serializers import (
     ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, InstructorProfileSerializer
 )
 
-from .pagination import CustomPagination
+from common.pagination import CustomPagination
 from common import permissions as custom_permissions
 User = get_user_model()
 
