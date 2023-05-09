@@ -22,8 +22,8 @@ Getting Started
 To run the API locally, follow these steps:
 
 1.  Clone the repository: `git clone https://github.com/yourusername/smart-learning-api.git`
-2.  Create a virtual environment: `python -m venv env`
-3.  Activate the virtual environment: `source env/bin/activate`
+2.  Create a virtual environment: `python -m venv venv`
+3.  Activate the virtual environment: `source venv/bin/activate`
 4.  Install dependencies: `pip install -r requirements.txt`
 5.  Change `.env.templates` to .env and setup you environment variables. 
 6.  Set up the database: `python manage.py migrate`
