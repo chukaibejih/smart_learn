@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.password_validation import validate_password
 from user_service.models import User, StudentProfile, InstructorProfile, SMSCode
 
 
@@ -41,6 +43,27 @@ class ConfirmSmsSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+    
+    def validate_new_password(self, value):
+        # Validate the password meets strength requirements
+        validate_password(value)
+        return value
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        # Check if the old password matches the current password of the user
+        if not check_password(value, user.password):
+            raise serializers.ValidationError("Old password does not match.")
+        return value
+    
+    def validate(self, data):
+        old_password = data.get('old_password', None)
+        new_password = data.get('new_password', None)
+
+        if old_password and new_password and old_password == new_password:
+            raise serializers.ValidationError("New password cannot be the same as old password.")
+
+        return data
 
     
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer): 
