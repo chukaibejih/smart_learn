@@ -45,9 +45,9 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
     
     def validate_new_password(self, value):
-    # Validate the password meets strength requirements
-    validate_password(value)
-    return value
+        # Validate the password meets strength requirements
+        validate_password(value)
+        return value
 
     def validate_old_password(self, value):
         user = self.context['request'].user
