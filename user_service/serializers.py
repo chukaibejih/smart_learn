@@ -2,6 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
+from rest_framework.validators import MaxValueValidator, MinValueValidator
 from user_service.models import User, StudentProfile, InstructorProfile, SMSCode
 
 
@@ -14,8 +15,24 @@ class ConfirmEmailSerializer(serializers.ModelSerializer):
         fields = ['token', 'uidb64']
         
 class ConfirmSmsSerializer(serializers.ModelSerializer):
-      number = serializers.CharField(max_length=6, required=True)
-      
+     number = serializers.CharField(max_length=6, required=True,
+                                    validators=[MinaValueValidator(999999),
+                                                MaxValueValidator(100000)])
+     def validate_number(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError("Number must be a string of digits.")
+  
+        # Retrieve the SMSCode instance for the authenticated user
+        sms_code = SMSCode.objects.filter(user=self.context['request'].user).first()
+        if not sms_code:
+            raise serializers.ValidationError("No SMS verification code found for this user.")
+        
+        # Compare the user-provided number with the number in the SMSCode instance
+        if value != sms_code.number:
+            raise serializers.ValidationError("Incorrect SMS verification code.")
+        
+        return value
+        
       class Meta:
         model = SMSCode
         fields = ['number']
