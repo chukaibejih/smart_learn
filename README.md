@@ -152,4 +152,4 @@ Contributions to this project are welcome! To get started, fork the repository a
 License
 -------
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://chat.openai.com/chat/LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
