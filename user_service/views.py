@@ -7,11 +7,13 @@ from django_auto_prefetching import AutoPrefetchViewSetMixin
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
-from user_service.models import StudentProfile, InstructorProfile
+from user_service.models import StudentProfile, InstructorProfile, SMSCode 
 from user_service.serializers import (
  UserRegistrationSerializer, CustomTokenObtainPairSerializer, RetrieveUserSerializer,
-    ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, InstructorProfileSerializer
+    ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, InstructorProfileSerializer,
+  ConfirmsmsSerializer
 )
+
 
 from common.pagination import CustomPagination
 from common import permissions as custom_permissions
@@ -19,13 +21,51 @@ User = get_user_model()
 
 # Create your views here.
 
+class SMSCodeView(APIView):
+
+    def get(self, request):
+
+        sms_codes = SMSCode.objects.all()
+
+        serializer = ConfirmSmsSerializer(sms_codes, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+
+        serializer = ConfirmSmsSerializer(data=request.data)
+
+        if serializer.is_valid():
+
+            number = serializer.validated_data['number']
+
+            try:
+
+                sms_code = SMSCode.objects.get(number=number)
+
+            except SMSCode.DoesNotExist:
+
+                return Response({"error": "SMS code not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+            if sms_code.is_expired():
+
+                return Response({"error": "SMS code has expired"}, status=status.HTTP_400_BAD_REQUEST)
+
+            
+
+            return Response({"success": "SMS code confirmed"}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ConfirmEmailView(APIView):
 
     queryset = get_user_model().objects.all()
     serializer_class = ConfirmEmailSerializer
     permission_classes = []
 
-    def get(self, request, uidb64, token):
+    def get(self, request, uidb64, token 
         try:
             uid = smart_str(urlsafe_base64_decode(uidb64))
             user = get_user_model().objects.get(pk=uid)
