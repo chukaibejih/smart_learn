@@ -108,3 +108,7 @@ class ReviewTestCase(ModelSetup, APITestCase):
         url = reverse("review-detail", args=[self.review.pk])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        course = Course.objects.get(id=self.course1.id)
+        self.assertEqual(course.average_rating, 0.0)
+        self.assertEqual(course.reviews, 0)

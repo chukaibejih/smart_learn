@@ -58,10 +58,12 @@ class UserServiceTestCase(APITestCase):
         self.assertEqual(User.objects.count(), 1)
 
     def test_login_existing_user(self):
-         url = reverse('token-obtain-pair')
-         data = {
+        url = reverse('token-obtain-pair')
+        data = {
             'email': 'test@test.com',
             'password': 'testpassword'
-         }
-         response = self.client.post(url, data)
-         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        self.assertTrue('refresh' in response.data)
