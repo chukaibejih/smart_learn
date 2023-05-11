@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from user_service.models import StudentProfile, InstructorProfile, SMSCode 
 from user_service.serializers import (
  UserRegistrationSerializer, CustomTokenObtainPairSerializer, RetrieveUserSerializer,
-    ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, InstructorProfileSerializer,
-  ConfirmsmsSerializer
+    ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, 
+    InstructorProfileSerializer, ConfirmSmsSerializer
 )
 
 
@@ -65,7 +65,7 @@ class ConfirmEmailView(APIView):
     serializer_class = ConfirmEmailSerializer
     permission_classes = []
 
-    def get(self, request, uidb64, token 
+    def get(self, request, uidb64, token):
         try:
             uid = smart_str(urlsafe_base64_decode(uidb64))
             user = get_user_model().objects.get(pk=uid)
