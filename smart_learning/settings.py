@@ -192,6 +192,16 @@ SWAGGER_SETTINGS = {
 
 STRIPE_SECRET = os.getenv('STRIPE_SECRET')
 
+# Twilio Account SID and Auth Token
+
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+
+# Twilio phone number used for sending SMS messages
+
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
