@@ -61,4 +61,7 @@ class IsCourseInstructor(permissions.BasePermission):
     message = 'You are not the instructor of this course.'
 
     def has_object_permission(self, request, view, obj):
-        return obj.course.instructor.user == request.user
+        if hasattr(obj, 'lesson'):
+            return obj.lesson.module.course.instructor.user == request.user
+        else:
+            return obj.module.course.instructor.user == request.user

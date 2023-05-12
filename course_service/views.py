@@ -86,6 +86,8 @@ class ModuleView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     # Set the queryset and serializer_class
     queryset = Module.objects.all()
     serializer_class = ModuleSerializer
+    pagination_class = CustomPagination 
+    renderer_classes = [CustomRenderer]
 
     def get_queryset(self):
         # Get the course id and module id from the URL parameter
@@ -122,7 +124,7 @@ class ModuleView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
 
         # Check if the course instructor is creating the module for their own course
         if course.instructor != course_instructor:
-             raise serializers.ValidationError("You can only create modules for courses that you are an instructor of.")
+             raise serializers.ValidationError({"detail: " : "You can only create modules for courses that you are an instructor of."})
 
         # Save the module
         serializer.save()
@@ -133,6 +135,8 @@ class LessonView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     # set the queryset and serializer class
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    pagination_class = CustomPagination 
+    renderer_classes = [CustomRenderer]
 
     # Get the module id and lesson id from the URL parameter
     def get_queryset(self):
@@ -163,6 +167,14 @@ class LessonView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
+
+        if not self.request.user.is_instructor:
+            raise validators.ValidationError(
+                                            {
+                                            "detail": "User must have is_instructor = True to create a course"
+                                            }
+                                            )
+        
         # Set the course instructor to the current authenticated user
         course_instructor = self.request.user.instructor_profile
         module = serializer.validated_data['module']
@@ -170,7 +182,7 @@ class LessonView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
 
         # Check if the course instructor is creating the module for their own course
         if course.instructor != course_instructor:
-             raise serializers.ValidationError("You can only create modules for courses that you are an instructor of.")
+             raise serializers.ValidationError("You cannot create a new lesson for a module that belongs to a course you are not an instructor of.")
 
         # Save the module
         serializer.save()
