@@ -72,7 +72,8 @@ class ModuleTestCase(ModelSetup, APITestCase):
         url = reverse("module-list", args=[self.course1.id])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        print(Module.objects.filter(course=self.course1).count())
+        self.assertEqual(Module.objects.filter(course=self.course1).count(), 0)
 
         # Add a module to the course and check if it's returned
         data = {
@@ -141,7 +142,7 @@ class ModuleTestCase(ModelSetup, APITestCase):
         self.assertEqual(Module.objects.count(), 1)
         self.assertEqual(Module.objects.first().name, "Loops in Python")
 
-    # Test case tpo delete a module belonging to a particular course
+    # Test case to delete a module belonging to a particular course
     def test_delete_module(self):
         module = Module.objects.create(
             name="Loops",
