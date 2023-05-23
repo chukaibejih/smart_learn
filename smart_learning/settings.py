@@ -26,6 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY'),
 
+# ALLOWED_HOSTS = ['homemix-api.onrender.com']
+CORS_ORIGIN_ALLOW_ALL = True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -116,20 +119,27 @@ WSGI_APPLICATION = 'smart_learning.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    # Development
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': os.getenv('DB_NAME'),
+    #     'NAME': os.getenv('DB_NAME'),
 
-        'USER': os.getenv('DB_USER'),
+    #     'USER': os.getenv('DB_USER'),
 
-        'PASSWORD': os.getenv('DB_PASSWORD'),
+    #     'PASSWORD': os.getenv('DB_PASSWORD'),
 
-        'HOST': os.getenv('DB_HOST'),
+    #     'HOST': os.getenv('DB_HOST'),
 
-        'PORT': os.getenv('DB_PORT'),
-    }
+    #     'PORT': os.getenv('DB_PORT'),
+    # }
 
+    
+ #PRODUCTION
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'), 
+        conn_max_age=600    
+        )
 }
 
 
