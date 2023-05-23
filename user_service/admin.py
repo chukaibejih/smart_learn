@@ -23,4 +23,4 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ['email', 'first_name', 'last_name']
 
 
-@admin.register(SMSCode)
+admin.site.register(SMSCode)
