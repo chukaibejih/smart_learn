@@ -94,6 +94,7 @@ The following endpoints are available in the API:
 -   `/api/auth/register/` (POST): to allow users to register for an account.
 -   `/api/auth/login/` (POST): to allow users to log in to their account.
 -   `/api/auth/logout/` (POST): to allow users to log out of their account.
+-   `/api/auth/smscode/` (POST): to allow users verfiy SMS verfication code
 
 ### User Profile Endpoints
 
