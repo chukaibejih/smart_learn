@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_countries',
     'django_filters',
-    'debug_toolbar',
+    # 'debug_toolbar',
 ]
 
 AUTH_USER_MODEL = 'user_service.User'
@@ -88,9 +88,9 @@ REST_FRAMEWORK = {
     ),
 }
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+# ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@smartlearn'
