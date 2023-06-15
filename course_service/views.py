@@ -15,20 +15,16 @@ from user_service.models import InstructorProfile
 from .models import (
     Course,
     Review,
-    InstructorSkill,
     Module,
     Lesson,
     Tag,
     TagModule,
-    SkillCertification,
     Quiz
 )
 from .serializers import (
     CourseSerializer,
     ReviewSerializer,
     LessonSerializer,
-    InstructorSkillSerializer,
-    SkillCertificationSerializer,
     ModuleSerializer,
     TagSerializer,
     TagModuleSerializer,
@@ -188,7 +184,6 @@ class LessonView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
         serializer.save()
 
 
-
 class TagView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
 
     # Set the queryset and serializer_class
@@ -201,7 +196,6 @@ class TagModuleView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     # Set the queryset and serializer_class
     queryset = TagModule.objects.all()
     serializer_class = TagModuleSerializer
-
 
 
 class ReviewCreateView(generics.CreateAPIView):
@@ -249,102 +243,6 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj 
 
-class InstructorSkillCreateView(generics.CreateAPIView):
-    serializer_class = InstructorSkillSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [CustomRenderer]
-    queryset = InstructorSkill.objects.all()
-
-    def perform_create(self, serializer):
-        # Ensure user is an instructor in order to add a skill
-        if not self.request.user.is_instructor:
-            raise validators.ValidationError(
-                                            {
-                                            "detail": "User must have is_instructor = True to add a Skill"
-                                            }
-                                            )
-        instructor_profile = get_object_or_404(InstructorProfile, user=self.request.user)
-        serializer.save(instructor=instructor_profile)
-
-class InstructorSkillListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
-    serializer_class = InstructorSkillSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [CustomRenderer]
-    pagination_class     = CustomPagination
-    queryset = InstructorSkill.objects.all()
-    
-
-    def get_queryset(self):
-        return super().get_queryset().filter(instructor__user__is_active=True)
-
-
-class InstructorSkillDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = InstructorSkillSerializer
-    permission_classes = [custom_permissions.IsCreatorOrReadOnly]
-    renderer_classes = [CustomRenderer]
-
-    def get_object(self):
-        pk = self.kwargs["pk"]
-        obj = get_object_or_404(InstructorSkill, id=pk)
-        self.check_object_permissions(self.request, obj)
-        return obj
-    
-class SkillCertificationCreateView(generics.CreateAPIView):
-    serializer_class = SkillCertificationSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [CustomRenderer]
-    queryset = SkillCertification.objects.all()
-    
-    def perform_create(self, serializer):
-        skill_id = self.kwargs["pk"]
-        instructor = get_object_or_404(InstructorProfile, user=self.request.user)
-        instance = instructor.insructor_skill.filter(id=skill_id).first()
-        
-        if not self.request.user.is_instructor:
-            raise validators.ValidationError(
-                                            {
-                                            "detail": "User must have is_instructor = True to create a certificate"        
-                                            }
-                                            )
-        try:    
-            serializer.save(skill=instance)
-        except IntegrityError:
-            raise validators.ValidationError(
-                                            {
-                                            "detail": "There is a certificate for this skill already!"
-                                            }
-                                            )
-    
-class SkillCertificationListView(AutoPrefetchViewSetMixin, generics.ListAPIView):
-    serializer_class = SkillCertificationSerializer
-    pagination_class = CustomPagination
-    renderer_classes = [CustomRenderer]
-    queryset = SkillCertification.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def get_queryset(self):
-        instructor_id = self.request.query_params.get("instructor_id")
-        
-        if instructor_id:
-            return super().get_queryset().filter(skill__instructor__user__is_active=True, \
-                                                    skill__instructor__id=instructor_id)
-        if self.request.user.is_staff:
-            return super().get_queryset()
-        return super().get_queryset().none()
-    
-    
-class SkillCertificationDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = SkillCertificationSerializer 
-    permission_classes = [custom_permissions.IsCreatorOrReadOnly]
-    renderer_classes = [CustomRenderer]
-    
-    def get_object(self):
-        skill_id = self.kwargs["skill_pk"]
-        cert_id = self.kwargs["cert_pk"]
-        obj = get_object_or_404(SkillCertification, skill__id=skill_id, id=cert_id)
-        self.check_object_permissions(self.request, obj)
-        return obj 
-    
 
 class QuizView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     serializer_class = QuizSerializer
@@ -386,22 +284,4 @@ class QuizView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
                                             }
                                             )
         serializer.save(lesson=lesson)
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-    
-    
     

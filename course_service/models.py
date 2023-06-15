@@ -147,44 +147,6 @@ class Review(models.Model):
         return f"Comment by {self.user.email} on {self.course.name}"
 
 
-class InstructorSkill(models.Model):
-    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
-    instructor = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE, null=True, blank=True, related_name="insructor_skill")
-    skill_name = models.CharField(max_length=40, null=True, blank=True)
-    skill_level = models.PositiveIntegerField(validators=[
-                                                     MinValueValidator(0),
-                                                     MaxValueValidator(10)
-                                                    ]
-                                                    )
-    
-    class Meta:
-        ordering = ["-skill_level"]
-
-    def __str__(self):
-        return self.skill_name
-
-class SkillCertification(models.Model):
-    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
-    skill = models.OneToOneField(InstructorSkill, on_delete=models.CASCADE, blank=True, null=True, related_name="skill_certification")
-    certification_name = models.CharField(max_length=50)
-    certification_date = models.DateField()
-    certificate_file = models.ImageField(upload_to="user_service/instructor/certificates/", null=True, blank=True)
-
-    class Meta:
-        ordering = ("skill__instructor",)
-
-    def __str__(self):
-        return f"{self.certification_name} for {self.skill.skill_name} "
-
-    def save(self, *args, **kwargs):
-        """Deletes old cover_image when making an update to cover_image"""
-        with contextlib.suppress(Exception):
-            old = SkillCertification.objects.get(id=self.id)
-            if old.certificate_file != self.certificate_file:
-                old.certificate_file.delete(save=False)
-        super().save(*args, **kwargs)
-
-
 class Quiz(models.Model):
     id = ShortUUIDField(primary_key=True, max_length=6, length=6, editable=False)
     name = models.CharField(max_length=70)

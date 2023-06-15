@@ -5,7 +5,7 @@ from rest_framework import serializers
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.password_validation import validate_password
-from user_service.models import User, StudentProfile, InstructorProfile, SMSCode
+from user_service.models import InstructorSkill, SkillCertification, User, StudentProfile, InstructorProfile, SMSCode
 
 
 class ConfirmEmailSerializer(serializers.ModelSerializer):
@@ -170,3 +170,23 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
             return InstructorProfileSerializer(profile).data
         except InstructorProfile.DoesNotExist:
             return None
+
+
+class InstructorSkillSerializer(serializers.ModelSerializer):
+    instructor = serializers.StringRelatedField()
+    
+    class Meta:
+        model = InstructorSkill
+        fields = "__all__"
+
+
+class SkillCertificationSerializer(serializers.ModelSerializer):
+    instructor = serializers.SerializerMethodField()
+    
+    def get_instructor(self, obj):
+        return obj.skill.instructor.user.email  
+    
+    class Meta:
+        model = SkillCertification
+        fields = "__all__"
+        

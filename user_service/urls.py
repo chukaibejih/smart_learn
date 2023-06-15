@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from . import views
 
 router = DefaultRouter()
 router.register('users', UserViewSet, basename='users')
@@ -19,4 +20,10 @@ urlpatterns = router.urls + [
     path('confirm-email/<uidb64>/<str:token>/', ConfirmEmailView.as_view(), name='confirm-email'),
     path('smscode/', SMSCodeView.as_view(), name='sms_code'),
 
+    path("instructor/skills/", views.InstructorSkillListView.as_view(), name="instructor-skills"),
+    path("instructor/skills/create-skill/", views.InstructorSkillCreateView.as_view(), name="create-skill"),
+    path("instructor/skills/certificates/", views.SkillCertificationListView.as_view(), name="skill-certificates-list"),
+    path("instructor/skills/<str:pk>/", views.InstructorSkillDetailView.as_view(), name="skill-details"),
+    path("instructor/skills/<str:pk>/create-certificate/", views.SkillCertificationCreateView.as_view(), name="create-skill-certificate"),
+    path("instructor/skills/<str:skill_pk>/certificates/<str:cert_pk>/", views.SkillCertificationDetailView.as_view(), name="skill-certificate-detail"),
 ]
