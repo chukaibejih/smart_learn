@@ -5,8 +5,6 @@ from .models import (
  Lesson, 
  Tag, 
  TagModule, 
- InstructorSkill, 
- SkillCertification,
  Quiz
  )
 from rest_framework import serializers
@@ -54,24 +52,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review 
         fields = "__all__"
 
-
-class InstructorSkillSerializer(serializers.ModelSerializer):
-    instructor = serializers.StringRelatedField()
-    
-    class Meta:
-        model = InstructorSkill
-        fields = "__all__"
-
-class SkillCertificationSerializer(serializers.ModelSerializer):
-    instructor = serializers.SerializerMethodField()
-    
-    def get_instructor(self, obj):
-        return obj.skill.instructor.user.email  
-    
-    class Meta:
-        model = SkillCertification
-        fields = "__all__"
-        
         
 class QuizSerializer(serializers.ModelSerializer):
     lesson = serializers.StringRelatedField()
