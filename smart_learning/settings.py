@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY'),
 
-ALLOWED_HOSTS = ['smart-learn.onrender.com', '127.0.0.1']
+ALLOWED_HOSTS = ['smart-learn.onrender.com', '127.0.0.1', 'localhost']
 CORS_ORIGIN_ALLOW_ALL = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -58,10 +58,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
     'phonenumber_field',
-    'django_countries',
     'django_filters',
     # 'debug_toolbar',
 ]
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 AUTH_USER_MODEL = 'user_service.User'
 
@@ -121,26 +124,26 @@ WSGI_APPLICATION = 'smart_learning.wsgi.application'
 
 DATABASES = {
     # Development
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-    #     'NAME': os.getenv('DB_NAME'),
+        'NAME': os.getenv('DB_NAME'),
 
-    #     'USER': os.getenv('DB_USER'),
+        'USER': os.getenv('DB_USER'),
 
-    #     'PASSWORD': os.getenv('DB_PASSWORD'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
 
-    #     'HOST': os.getenv('DB_HOST'),
+        'HOST': os.getenv('DB_HOST'),
 
-    #     'PORT': os.getenv('DB_PORT'),
-    # }
+        'PORT': os.getenv('DB_PORT'),
+    }
 
     
  #PRODUCTION
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'), 
-        conn_max_age=600    
-        )
+#     'default': dj_database_url.config(
+#         default=os.getenv('DATABASE_URL'), 
+#         conn_max_age=600    
+#         )
 }
 
 
