@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import django_countries.fields
 import phonenumber_field.modelfields
 import shortuuid.django_fields
 
@@ -25,7 +24,6 @@ class Migration(migrations.Migration):
                 ('address', models.CharField(blank=True, max_length=100, null=True)),
                 ('city', models.CharField(blank=True, max_length=50, null=True)),
                 ('state', models.CharField(blank=True, max_length=50, null=True)),
-                ('country', django_countries.fields.CountryField(blank=True, max_length=2, null=True)),
                 ('bio', models.TextField(blank=True, null=True)),
                 ('profile_picture', models.ImageField(blank=True, null=True, upload_to='instructor/profile_pictures/')),
                 ('total_students', models.PositiveIntegerField(default=0)),

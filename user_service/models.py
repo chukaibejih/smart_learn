@@ -2,7 +2,6 @@ import uuid
 import contextlib
 from shortuuid.django_fields import ShortUUIDField 
 from phonenumber_field.modelfields import PhoneNumberField
-from django_countries.fields import CountryField
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
