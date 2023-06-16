@@ -123,7 +123,11 @@ WSGI_APPLICATION = 'smart_learning.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+<<<<<<< HEAD
     # Development
+=======
+    #Development
+>>>>>>> d4b4de0f58f466b83231e4b431f67e91528cf0ad
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
@@ -136,6 +140,7 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST'),
 
         'PORT': os.getenv('DB_PORT'),
+<<<<<<< HEAD
     }
 
     
@@ -144,6 +149,16 @@ DATABASES = {
 #         default=os.getenv('DATABASE_URL'), 
 #         conn_max_age=600    
 #         )
+=======
+    },
+
+    
+ #PRODUCTION
+    # 'default': dj_database_url.config(
+    #     default=os.getenv('DATABASE_URL'), 
+    #     conn_max_age=600    
+    #     )
+>>>>>>> d4b4de0f58f466b83231e4b431f67e91528cf0ad
 }
 
 
