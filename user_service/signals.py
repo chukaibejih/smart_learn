@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from .models import StudentProfile, InstructorProfile, SMSCode
+from .tasks import send_email_confirmation_task
 
 
 @receiver(post_save, sender=get_user_model(), dispatch_uid="unique_identifier")
@@ -29,7 +30,8 @@ def send_confirmation_email(sender, instance, created, **kwargs):
         }) 
             from_email = DEFAULT_FROM_EMAIL
             to_email = instance.email
-            send_mail(subject, message, from_email, [to_email], fail_silently=False)
+            send_email_confirmation_task.delay(subject, message, from_email, to_email)
+            print('Email confirmation task queued')  # Debug print
         except Exception as e:
             print(f'Error sending confirmation email: {e}')
 

@@ -1,3 +1,4 @@
+celery==5.3.0
 dj-database-url==1.0.0
 Django==4.1
 django-auto-prefetching==0.2.12
