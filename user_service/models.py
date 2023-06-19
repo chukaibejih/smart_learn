@@ -2,13 +2,9 @@ import uuid
 import contextlib
 from shortuuid.django_fields import ShortUUIDField 
 from phonenumber_field.modelfields import PhoneNumberField
-<<<<<<< HEAD
-=======
-from django_countries.fields import CountryField
-from django.core.validators import MinValueValidator, MaxValueValidator
->>>>>>> d4b4de0f58f466b83231e4b431f67e91528cf0ad
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 import random
 from user_service.manager import UserManager

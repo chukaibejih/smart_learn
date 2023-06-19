@@ -6,8 +6,6 @@ from .models import (
     TagModule, 
     Module, 
     Lesson, 
-    InstructorSkill, 
-    SkillCertification,
     Quiz
 )
 # Register your models here.
@@ -52,17 +50,6 @@ class LessonAdmin(admin.ModelAdmin):
     list_filter = ['module']
     search_fields = ['name', 'description']
     
-    
-@admin.register(InstructorSkill)
-class InstructorSkillAdmin(admin.ModelAdmin):
-    list_display = ["instructor", "skill_name", "skill_level"]
-    list_filter = ["instructor", "skill_level"]
-    
-
-@admin.register(SkillCertification)
-class SkillCertificationAdmin(admin.ModelAdmin):
-    list_display = ["skill", "certification_name", "certification_date"]
-    list_filter = ["skill"]
     
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
