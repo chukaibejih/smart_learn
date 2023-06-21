@@ -30,8 +30,7 @@ def send_confirmation_email(sender, instance, created, **kwargs):
         }) 
             from_email = DEFAULT_FROM_EMAIL
             to_email = instance.email
-            send_email_confirmation_task.delay(subject, message, from_email, to_email)
-            print('Email confirmation task queued')  # Debug print
+            send_mail(subject, message, from_email, [to_email], fail_silently=False)
         except Exception as e:
             print(f'Error sending confirmation email: {e}')
 
