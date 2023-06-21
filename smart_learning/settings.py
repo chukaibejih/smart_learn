@@ -124,26 +124,26 @@ WSGI_APPLICATION = 'smart_learning.wsgi.application'
 
 DATABASES = {
     # Development
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': os.getenv('DB_NAME'),
+    #     'NAME': os.getenv('DB_NAME'),
 
-        'USER': os.getenv('DB_USER'),
+    #     'USER': os.getenv('DB_USER'),
 
-        'PASSWORD': os.getenv('DB_PASSWORD'),
+    #     'PASSWORD': os.getenv('DB_PASSWORD'),
 
-        'HOST': os.getenv('DB_HOST'),
+    #     'HOST': os.getenv('DB_HOST'),
 
-        'PORT': os.getenv('DB_PORT'),
-    }
+    #     'PORT': os.getenv('DB_PORT'),
+    # }
 
     
  #PRODUCTION
-#     'default': dj_database_url.config(
-#         default=os.getenv('DATABASE_URL'), 
-#         conn_max_age=600    
-#         )
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'), 
+        conn_max_age=600    
+        )
 }
 
 
