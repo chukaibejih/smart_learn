@@ -1,13 +1,14 @@
 # Smart Learning(Work In Progress)
 
-This Smart Learning API is built with Django Rest Framework (DRF) and provides a powerful set of features for both users and instructors. With this API, users can enroll in courses, complete modules, lessons and quizzes. Instructors can create and manage courses, modules, lessons, and quizzes, as well as view information about enrolled users.
+This Smart Learning API is built with Django Rest Framework (DRF) and provides a powerful set of features for both users and instructors. With this API, users can enroll in courses, and complete modules, lessons and quizzes. Instructors can create and manage courses, modules, lessons, and quizzes, as well as view information about enrolled users.
 
 This Smart Learning API is designed to be flexible and easy to use. Using Swagger/OpenAPI to provide you with a clean and intuitive API interface that makes it easy for developers to integrate with other systems. Whether you're building a mobile app, a web-based learning platform, or something else entirely.
 
 System Architecture
 ---------------
 
-![Smart Leraning Microservices (2)](https://user-images.githubusercontent.com/29266211/223722821-d64cbe95-6a67-4f99-bf72-0bfffe675378.jpg)
+![service diagram drawio (2)](https://github.com/chukaibejih/smart_learn/assets/29266211/ca34cf71-0a69-44ff-9555-2f4f2ea65ac0)
+
 
 
 ER Diagram
