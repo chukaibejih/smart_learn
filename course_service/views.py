@@ -211,6 +211,7 @@ class ReviewCreateView(generics.CreateAPIView):
             course_identity = self.kwargs["pk"]
             course = get_object_or_404(Course, id=course_identity)
             serializer.save(course=course, user=self.request.user)
+            course.reviews += 1
         except IntegrityError:
             raise validators.ValidationError(
                                             {
