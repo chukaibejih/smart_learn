@@ -140,17 +140,10 @@ DATABASES = {
 
     
  #PRODUCTION
-<<<<<<< HEAD
     # 'default': dj_database_url.config(
     #     default=os.getenv('DATABASE_URL'), 
     #     conn_max_age=600    
     #     )
-=======
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600
-        )
->>>>>>> ee8ef0ab73db36185042159e6d4c02296a7f4d1c
 }
 
 
