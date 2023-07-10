@@ -3,7 +3,8 @@ from shortuuid.django_fields import ShortUUIDField
 from user_service.models import InstructorProfile
 from django.core.validators import MinValueValidator, MaxValueValidator
 import contextlib
-from django.conf import settings 
+from django.conf import settings
+from django.core.validators import FileExtensionValidator
 # Create your models here.
 
 class Course(models.Model):
@@ -102,6 +103,8 @@ class Lesson(models.Model):
     description = models.TextField()
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='module')
     video_url = models.URLField(blank=True, null=True)
+    lesson_video = models.FileField(upload_to='Lesson_material/videos/', validators=[FileExtensionValidator(['mp4', 'mkv', 'wmv', '3gp', 'f4v', 'avi', 'mp3'])], blank=True, null=True)
+    lesson_documents = models.FileField(upload_to='Lesson_material/documents/', validators=[FileExtensionValidator(['pdf', 'docx', 'doc', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', '7zip'])], blank=True, null=True)
     audio_url = models.URLField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     resources = models.TextField(blank=True, null=True)
@@ -114,6 +117,21 @@ class Lesson(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_document_type(self):
+        ext = str(self.lesson_documents).split(".")
+        ext = ext[len(ext)-1]
+
+        if ext == 'doc' or ext == 'docx':
+            return 'word'
+        elif ext == 'pdf':
+            return 'pdf'
+        elif ext == 'xls' or ext == 'xlsx':
+            return 'excel'
+        elif ext == 'ppt' or ext == 'pptx':
+            return 'powerpoint'
+        elif ext == 'zip' or ext == 'rar' or ext == '7zip':
+            return 'archive'
     
 
 class TagModule(models.Model):
