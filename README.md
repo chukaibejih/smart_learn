@@ -149,7 +149,7 @@ While the Smart Learning API is designed to be a flexible and powerful tool for 
 Contributing
 ------------
 
-Contributions to this project are welcome! To get started, fork the repository and create a new branch for your feature or bug fix. Once you've made your changes, submit a pull request for review.
+Contributions to this project are welcome! Go through our [GUIDELINES](https://github.com/chukaibejih/smart_learn/blob/main/CONTRIBUTING.md)
 
 
 License
