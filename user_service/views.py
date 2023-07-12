@@ -2,6 +2,7 @@ from wsgiref.validate import validator
 from django.shortcuts import get_object_or_404
 from psycopg2 import IntegrityError
 from rest_framework import viewsets, permissions, status, generics
+from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import smart_str
@@ -24,7 +25,6 @@ from common.pagination import CustomPagination
 from common import permissions as custom_permissions
 User = get_user_model()
 
-# Create your views here.
 
 class SMSCodeView(APIView):
 
@@ -63,6 +63,7 @@ class SMSCodeView(APIView):
             return Response({"success": "SMS code confirmed"}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class ConfirmEmailView(APIView):
 
@@ -84,6 +85,7 @@ class ConfirmEmailView(APIView):
             return Response({"message": "Email confirmation successful"})
         else:
             return Response({"error": "Invalid token"}, status=400)
+        
 
 class ChangePasswordView(generics.CreateAPIView):
     queryset = get_user_model().objects.all()
@@ -119,7 +121,7 @@ class UserViewSet(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return super().get_queryset()
-        return super().get_queryset().filter(is_active=True)
+        raise PermissionDenied("You do not have permission to access the list of users.")
 
     # Define a get_serializer_class method that uses a different serializer for user creation
     def get_serializer_class(self):
@@ -129,8 +131,6 @@ class UserViewSet(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
 
     # Define a get_permissions method that sets custom permissions based on the action    
     def get_permissions(self):
-        if self.action == 'create':
-            return [permissions.AllowAny()]
         if self.action == 'destroy':
             return {permissions.IsAuthenticated(), permissions.IsAdminUser()}
         return super().get_permissions()
