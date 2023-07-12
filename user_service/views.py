@@ -154,7 +154,8 @@ class StudentProfileViewset(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff or self.request.user.is_superuser:
             return super().get_queryset()
-        return super().get_queryset().filter(user__is_active=True)
+        # return super().get_queryset().filter(user__is_active=True)
+        return super().get_queryset().filter(user=self.request.user)
 
     def get_permissions(self):
         if self.action in ["update", "partial_update"]:
