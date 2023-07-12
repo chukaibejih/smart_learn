@@ -105,7 +105,7 @@ class SMSCode(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.username}-{self.number}'
+        return f'{self.user.first_name}-{self.number}'
 
     def save(self, *args, **kwargs):
         verification_code = random.randint(100000, 999999)
