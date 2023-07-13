@@ -133,6 +133,8 @@ class UserViewSet(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'destroy':
             return {permissions.IsAuthenticated(), permissions.IsAdminUser()}
+        if self.action == 'create':
+            return {permissions.AllowAny()}
         return super().get_permissions()
     
 
