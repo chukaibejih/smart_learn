@@ -41,7 +41,7 @@ class User(AbstractUser, PermissionsMixin):
 
 
 class StudentProfile(models.Model):
-    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='student_profile')
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
@@ -65,11 +65,14 @@ class StudentProfile(models.Model):
             old = StudentProfile.objects.get(id=self.id)
             if old.profile_picture != self.profile_picture:
                 old.profile_picture.delete(save=False)
+        
+        # Set the student ID to be the same as the user ID
+        self.id = self.user.id
         super().save(*args, **kwargs)
 
 
 class InstructorProfile(models.Model):
-    id = ShortUUIDField(primary_key=True, length=6, max_length=6, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='instructor_profile')
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
@@ -91,11 +94,14 @@ class InstructorProfile(models.Model):
         return self.user.email
 
     def save(self, *args, **kwargs):
-        """Deletes old profile_picture when making an update to profile_picture"""
+        # Deletes old profile_picture when making an update to profile_picture
         with contextlib.suppress(Exception):
             old = InstructorProfile.objects.get(id=self.id)
             if old.profile_picture != self.profile_picture:
                 old.profile_picture.delete(save=False)
+
+        # Set the student ID to be the same as the user ID
+        self.id = self.user.id
         super().save(*args, **kwargs)
         
 class SMSCode(models.Model):
