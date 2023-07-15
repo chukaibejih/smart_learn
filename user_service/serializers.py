@@ -139,14 +139,14 @@ class StudentProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentProfile
-        fields = "__all__"
+        exclude = ['user']
      
 
 class InstructorProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InstructorProfile
-        fields = "__all__"
+        exclude = ['user']
 
 
 class RetrieveUserSerializer(serializers.ModelSerializer):
