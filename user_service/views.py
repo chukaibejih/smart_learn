@@ -16,7 +16,7 @@ from user_service.models import InstructorSkill, SkillCertification, StudentProf
 from user_service.serializers import (
  InstructorSkillSerializer, SkillCertificationSerializer, UserRegistrationSerializer, CustomTokenObtainPairSerializer, RetrieveUserSerializer,
     ChangePasswordSerializer, ConfirmEmailSerializer, StudentProfileSerializer, 
-    InstructorProfileSerializer, ConfirmSmsSerializer
+    InstructorProfileSerializer, ConfirmSmsSerializer,StudentPublicProfileSerializer,InstructorPublicProfileSerializer
 )
 from rest_framework import validators
 
@@ -195,6 +195,21 @@ class InstructorProfileViewset(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
                 custom_permissions.IsOwnerOrReadOnly(),
             ]
         return super().get_permissions()
+
+from rest_framework.views import APIView
+
+
+class UserPublicProfileAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    # get: Get a single public profile by user ID.
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(get_user_model(), pk=kwargs['user_pk'])
+        if user.is_instructor == False:
+            user_public_profile_serializer = StudentPublicProfileSerializer(user.student_profile, many=False)
+        if user.is_instructor == True:
+            user_public_profile_serializer = InstructorPublicProfileSerializer(user.instructor_profile, many=False)
+        return Response(user_public_profile_serializer.data, status=status.HTTP_200_OK)
 
 
 class InstructorSkillCreateView(generics.CreateAPIView):

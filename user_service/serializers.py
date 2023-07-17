@@ -140,14 +140,28 @@ class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
         exclude = ['user']
-     
+
+class StudentPublicProfileSerializer(StudentProfileSerializer):
+    """ Child class that inherit from it's parents and changing Meta class properities """
+    class Meta(StudentProfileSerializer.Meta):
+        exclude = [
+            "date_of_birth","phone_number",
+            "address","city","state","country"
+        ]
+
 
 class InstructorProfileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = InstructorProfile
         exclude = ['user']
 
+class InstructorPublicProfileSerializer(InstructorProfileSerializer):
+    """ Child class that inherit from it's parents and changing Meta class properities """
+    class Meta(InstructorProfileSerializer.Meta):
+        exclude = [
+            "date_of_birth","phone_number",
+            "address","city","state","country"
+        ]
 
 class RetrieveUserSerializer(serializers.ModelSerializer):
     student_profile = serializers.SerializerMethodField()
