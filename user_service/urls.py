@@ -20,6 +20,8 @@ urlpatterns = router.urls + [
     path('confirm-email/<uidb64>/<str:token>/', ConfirmEmailView.as_view(), name='confirm-email'),
     path('smscode/', SMSCodeView.as_view(), name='sms_code'),
 
+    path('user_public_profile/<str:user_pk>/', views.UserPublicProfileAPIView.as_view(), name='user_public_profile'),
+    
     path("instructor/skills/", views.InstructorSkillListView.as_view(), name="instructor-skills"),
     path("instructor/skills/create-skill/", views.InstructorSkillCreateView.as_view(), name="create-skill"),
     path("instructor/skills/certificates/", views.SkillCertificationListView.as_view(), name="skill-certificates-list"),
