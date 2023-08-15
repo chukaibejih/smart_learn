@@ -35,8 +35,6 @@ def send_confirmation_email(sender, instance, created, **kwargs):
             print(f'Error sending confirmation email: {e}')
 
 
-
-
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
     """
@@ -63,10 +61,10 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 @receiver(post_save, sender=get_user_model())
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        if not instance.is_instructor:
-            StudentProfile.objects.create(user=instance)
-        else:
+        if instance.is_instructor:
             InstructorProfile.objects.create(user=instance)
+        else:
+            StudentProfile.objects.create(user=instance)
             
             
 @receiver(post_save, sender=get_user_model())
