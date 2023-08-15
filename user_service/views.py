@@ -196,6 +196,7 @@ class InstructorProfileViewset(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
             ]
         return super().get_permissions()
 
+
 from rest_framework.views import APIView
 
 
