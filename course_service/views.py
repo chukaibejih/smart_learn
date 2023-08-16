@@ -167,7 +167,7 @@ class LessonView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
         if not self.request.user.is_instructor:
             raise validators.ValidationError(
                                             {
-                                            "detail": "User must have is_instructor = True to create a course"
+                                            "detail": "User must instructor to create a course"
                                             }
                                             )
         
@@ -189,6 +189,8 @@ class TagView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     # Set the queryset and serializer_class
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    renderer_classes = [CustomRenderer]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class TagModuleView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
@@ -196,6 +198,8 @@ class TagModuleView(AutoPrefetchViewSetMixin, viewsets.ModelViewSet):
     # Set the queryset and serializer_class
     queryset = TagModule.objects.all()
     serializer_class = TagModuleSerializer
+    renderer_classes = [CustomRenderer]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class ReviewCreateView(generics.CreateAPIView):
