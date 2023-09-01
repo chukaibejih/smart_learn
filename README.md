@@ -44,7 +44,7 @@ Tests are organized into different files within the app's `tests` directory. Her
     python manage.py test
     ```
 
-2. To run a single test file, use the following command (replacing `<app_name>` and `<test_file>` with the appropriate values):
+2. To run a single test file, you can use the following command (replacing `<app_name>` and `<test_file>` with the appropriate values):
 
     ```
     python manage.py test <app_name>.tests.<test_file>
