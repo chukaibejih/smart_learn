@@ -23,6 +23,14 @@ services:
       - "8080:8080"
     command: sh -c "chmod +x /api/migrate.sh && sh /api/migrate.sh && /api/entrypoint.sh"
     restart: always
+  redis:
+    image: redis:alpine
+    env_file:
+      - .env
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_data:
