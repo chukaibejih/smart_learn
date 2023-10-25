@@ -2,7 +2,7 @@ name: Django CI - Test Phase
 
 on:
   push:
-    branches: [ "feature/deployment" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
