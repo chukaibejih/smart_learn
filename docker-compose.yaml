@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   postgres_db:
-    image: docker.io/bitnami/postgresql:latest
+    image: postgres:16
     env_file:
       - .env
     expose:
@@ -21,7 +21,7 @@ services:
       - .env 
     ports:
       - "8080:8080"
-    command: sh -c "chmod +x /api/build.sh && sh /api/build.sh && /api/entrypoint.sh"
+    command: sh -c "chmod +x /api/migrate.sh && sh /api/migrate.sh && /api/entrypoint.sh"
     restart: always
 
 volumes:
