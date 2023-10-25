@@ -26,7 +26,7 @@ jobs:
 
     services:
       postgres_db:
-        image: bitnami/postgresql:latest
+        image: postgres:13
         env:
           POSTGRESQL_DATABASE: ${{ env.POSTGRESQL_DATABASE }}
           POSTGRESQL_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
