@@ -8,12 +8,31 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    
+    env:
+      DJANGO_SUPERUSER_EMAIL: hello@taskmaster.com
+      SECRET_KEY: "someSampleKeydyNBYa83J+2RpTstv36ZSqX48D2EKBfz+OplD22GPNXoo/POvAwZI6BwUPKB54FSwiszzOfquIIFiJPfmniCA"
+      POSTGRESQL_DATABASE: dockerdc
+      POSTGRESQL_PASSWORD: mysecret1@Passwd
+      POSTGRESQL_USERNAME: myuser
+      POSTGRESQL_HOST: postgres_db
+      POSTGRESQL_PORT: 5432
+    
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.9]
+
+    services:
+      postgres_db:
+        image: docker.io/bitnami/postgresql:latest
+        env:
+          POSTGRESQL_DATABASE: ${{ env.POSTGRESQL_DATABASE }}
+          POSTGRESQL_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
+          POSTGRESQL_USERNAME: ${{ env.POSTGRESQL_USERNAME }}
+        ports:
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v3
