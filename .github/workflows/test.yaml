@@ -31,8 +31,15 @@ jobs:
           POSTGRESQL_DATABASE: ${{ env.POSTGRESQL_DATABASE }}
           POSTGRESQL_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
           POSTGRESQL_USERNAME: ${{ env.POSTGRESQL_USERNAME }}
+          POSTGRESQL_HOST: ${{ env.POSTGRESQL_HOST }}
+          POSTGRESQL_PORT: 5432
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
