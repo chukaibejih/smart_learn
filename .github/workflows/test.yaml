@@ -26,7 +26,7 @@ jobs:
 
     services:
       postgres_db:
-        image: docker.io/bitnami/postgresql:latest
+        image: bitnami/postgresql:latest
         env:
           POSTGRESQL_DATABASE: ${{ env.POSTGRESQL_DATABASE }}
           POSTGRESQL_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
