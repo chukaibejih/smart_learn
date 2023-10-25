@@ -12,7 +12,7 @@ jobs:
     
     env:
       DJANGO_SUPERUSER_EMAIL: hello@smartlearn.com
-      SECRET_KEY: "SOME_SAMPLE_KEY"
+      SECRET_KEY: ""
       POSTGRES_DB: dockerdc
       POSTGRES_PASSWORD: mysecret1@Passwd
       POSTGRES_USER: postgres
