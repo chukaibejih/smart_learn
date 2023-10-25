@@ -15,8 +15,8 @@ jobs:
       SECRET_KEY: "someSampleKeydyNBYa83J+2RpTstv36ZSqX48D2EKBfz+OplD22GPNXoo/POvAwZI6BwUPKB54FSwiszzOfquIIFiJPfmniCA"
       POSTGRESQL_DATABASE: dockerdc
       POSTGRESQL_PASSWORD: mysecret1@Passwd
-      POSTGRESQL_USERNAME: myuser
-      POSTGRESQL_HOST: 127.0.0.1
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_HOST: localhost
       POSTGRESQL_PORT: 5432
     
     strategy:
