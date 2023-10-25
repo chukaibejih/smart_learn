@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      DJANGO_SUPERUSER_EMAIL: hello@taskmaster.com
+      DJANGO_SUPERUSER_EMAIL: hello@smartlearn.com
       SECRET_KEY: "someSampleKeydyNBYa83J+2RpTstv36ZSqX48D2EKBfz+OplD22GPNXoo/POvAwZI6BwUPKB54FSwiszzOfquIIFiJPfmniCA"
-      POSTGRESQL_DATABASE: dockerdc
-      POSTGRESQL_PASSWORD: mysecret1@Passwd
-      POSTGRESQL_USERNAME: postgres
-      POSTGRESQL_HOST: localhost
-      POSTGRESQL_PORT: 5432
+      POSTGRES_DB: dockerdc
+      POSTGRES_PASSWORD: mysecret1@Passwd
+      POSTGRES_USER: postgres
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
     
     strategy:
       max-parallel: 4
@@ -28,12 +28,12 @@ jobs:
       postgres_db:
         image: postgres:13
         env:
-          POSTGRESQL_DATABASE: ${{ env.POSTGRESQL_DATABASE }}
-          POSTGRESQL_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
-          POSTGRESQL_USERNAME: ${{ env.POSTGRESQL_USERNAME }}
-          POSTGRESQL_HOST: ${{ env.POSTGRESQL_HOST }}
-          POSTGRESQL_PORT: 5432
-          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_HOST: ${{ env.POSTGRES_HOST }}
+          POSTGRES_PORT: 5432
+          # POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
