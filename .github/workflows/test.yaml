@@ -16,7 +16,7 @@ jobs:
       POSTGRESQL_DATABASE: dockerdc
       POSTGRESQL_PASSWORD: mysecret1@Passwd
       POSTGRESQL_USERNAME: myuser
-      POSTGRESQL_HOST: postgres_db
+      POSTGRESQL_HOST: 127.0.0.1
       POSTGRESQL_PORT: 5432
     
     strategy:
