@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY'),
 
-ALLOWED_HOSTS = ['smart-learn.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['smart-learn.onrender.com', '127.0.0.1', 'localhost', '0.0.0.0']
 CORS_ORIGIN_ALLOW_ALL = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -123,11 +123,20 @@ WSGI_APPLICATION = 'smart_learning.wsgi.application'
 
 DATABASES = {
     # Development
-    'default': {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    # 'default': {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
 
+    # DEVELOPMENT
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get("POSTGRES_DB"),
+        'USER': os.environ.get("POSTGRES_USER"),
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
+        'HOST': os.environ.get("POSTGRES_HOST", 'localhost'),
+        'PORT': os.environ.get("POSTGRES_PORT", 5432),
+    }
     
  #PRODUCTION
     # 'default': dj_database_url.config(

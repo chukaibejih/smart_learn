@@ -1,0 +1,18 @@
+FROM python:3.11-slim
+
+WORKDIR /api
+
+COPY . .
+
+# create a virtual env for the python application
+# this goes into the /opt dir 
+RUN python3 -m venv /opt/venv
+
+# install requirements and run the entrypoint script
+RUN /opt/venv/bin/pip install -r requirements.txt && \
+  chmod +x entrypoint.sh
+
+EXPOSE 8080
+
+# Start the application
+CMD ["/api/entrypoint.sh"]

@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  postgres_db:
+    image: postgres:16
+    env_file:
+      - .env
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - postgres_db
+    image: smart_learn:v1
+    env_file:
+      - .env 
+    ports:
+      - "8080:8080"
+    command: sh -c "chmod +x /api/migrate.sh && sh /api/migrate.sh && /api/entrypoint.sh"
+    restart: always
+  redis:
+    image: redis:alpine
+    env_file:
+      - .env
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
